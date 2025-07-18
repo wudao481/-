@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遗音天书 - 扶韵轩·琴魂视角</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
+            font-family: 'SimSun', 'STSong', serif;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+        /* 添加完成任务按钮样式 */
+        .exit-btn {
+            background-color: #ffd700;
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 8px 16px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        .fog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(128, 216, 255, 0.3);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            color: #f8f8f8;
+            text-shadow: 0 0 10px rgba(128, 216, 255, 0.8), 0 0 20px rgba(128, 216, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        .scene {
+            background: rgba(10, 25, 47, 0.75);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .scene:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            opacity: 0.15;
+            border-radius: 10px;
+            z-index: -1;
+        }
+        /* 不同场景的背景图 */
+        #扶韵轩主场景:before {
+            background-image: url('https://picsum.photos/id/175/800/600');
+            background-position: center;
+        }
+        #扶韵轩1:before {
+            background-image: url('https://picsum.photos/id/180/800/600');
+            background-position: center;
+        }
+        #扶韵轩2增1:before {
+            background-image: url('https://picsum.photos/id/184/800/600');
+            background-position: center;
+        }
+        .dialogue {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+        }
+        .choices {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .choice-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 20px;
+            color: #e0e0e0;
+            font-family: 'SimSun', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .choice-btn:hover {
+            background: rgba(128, 216, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+        .scene-content { display: none; }
+        .scene-content.active { display: block; animation: fadeIn 1s ease; }
+        .clue-card {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #ffd700;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="fog"></div>
+    <!-- 音乐控制组件 -->
+    <div class="music-control" id="musicControl">
+        <span id="musicIcon">▶</span>
+    </div>
+    <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+
+    <div class="container">
+        <header>
+            <h1>遗音天书</h1>
+            <p>扶韵轩 · 琴魂视角</p>
+        </header>
+
+        <!-- 主场景：扶韵轩 -->
+        <div id="扶韵轩主场景" class="scene scene-content active">
+            <div class="dialogue">
+                <p>你以琴魂的形态，出现在了扶韵轩。此时你看见一位画师正在作画。</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩1')">直接表明来意</button>
+                <button class="choice-btn" onclick="showScene('扶韵轩2')">先看看他在画什么</button>
+            </div>
+        </div>
+
+        <!-- 扶韵轩1分支 -->
+        <div id="扶韵轩1" class="scene scene-content">
+            <div class="dialogue">
+                <p>你直接向画师表明来意。</p>
+                <p>画师告诉你，他只是来这里上课作画的老师，并不通晓琴律。琴师在后面别院。</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩1_1')">下一步</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩1_1" class="scene scene-content">
+            <div class="dialogue">
+                <p>你飘到后面的别院，这里果然有一间琴室。帘子后面似乎有人……</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩1_2')">下一步</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩1_2" class="scene scene-content">
+            <div class="dialogue">
+                <p>里面的人开口问到："小琴魂，从我哪张琴跑出来的？长得还算标致。"</p>
+                <p>你没心思跟他唠嗑，一五一十把情况向他说明。那人听完之后，沉思片刻。</p>
+                <p>答道："他这老不羞，玩这种事情上瘾。你等等，我帮你找找。"</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩1_3')">下一步</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩1_3" class="scene scene-content">
+            <div class="dialogue">
+                <p>你安静地守在门口，看着那个人，一张一张琴敲打过去。终于，他停在了一张凤势琴前。</p>
+                <p>"是他了！"那人兴奋地取过琴，往你所在的地方丢了过来。你躲闪不及，被砸了个正着。</p>
+                <p>就在你想开口骂娘的时候，你发现你已经回到了自己的肉身！而刚刚那张琴，此时已经变成了一张信笺，落在你的脚边。</p>
+                <p>上书："带画，速回。落款：墨心"</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩1_4')">下一步</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩1_4" class="scene scene-content">
+            <div class="dialogue">
+                <p>"带画"是什么意思？你再一次回到前庭画师处。这一次，你认真的在一旁观看画师作画。</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩2增2')">下一步</button>
+            </div>
+        </div>
+
+        <!-- 扶韵轩2分支 -->
+        <div id="扶韵轩2" class="scene scene-content">
+            <div class="dialogue">
+                <p>你决定先看看画师在画什么。</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩2增1')">下一步</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩2增1" class="scene scene-content">
+            <div class="dialogue">
+                <p>画师对你说："前日有人付重金托我临摹一幅古画。你看……"</p>
+                <p>画师指了指左边，你看到左边的墙上挂着一幅巨大的人物画像，画像的题款是：神母元君像。</p>
+                <p>你感到这幅画似曾相识，好像就是大琴师挂在紫来洞床前的画像！于是你问到：</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩2_1')">托你画像之人，是不是紫来洞的大琴师？</button>
+                <button class="choice-btn" onclick="showScene('扶韵轩2_2')">你可知画中的人是谁？那人既然已经有了一幅，为什么要叫你重新再画一幅？</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩2增2" class="scene scene-content">
+            <div class="dialogue">
+                <p>画师对你说："前日有人付重金托我临摹一幅古画。你看……"</p>
+                <p>画师指了指左边，你看到左边的墙上挂着一幅巨大的人物画像，画像的题款是：神母元君像。</p>
+                <p>你感到这幅画似曾相识，好像就是大琴师挂在紫来洞床前的画像！于是你问到：</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩2_1')">托你画像之人，是不是紫来洞的大琴师？</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩2_1" class="scene scene-content">
+            <div class="dialogue">
+                <p>画师诧异抬头看了你一眼，随后，点了点头对你说：既然你已经猜到了，就替我转交给他吧！</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩2_2增1')">下一步</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩2_2" class="scene scene-content">
+            <div class="dialogue">
+                <p>画师："不知。他只说，再见故人之子，心中惦念故人，想重制此画，寄托相思。"</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩2_2_1')">下一步</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩2_2_1" class="scene scene-content">
+            <div class="dialogue">
+                <p>你心中已经明白了个七八分，对画师说到："我现在是没有实体的灵魂，你看见我，竟然丝毫不害怕。而且，你字里行间都透露着这幅画不同寻常的意义。我看，大琴师不是想考验我，他只是想让我替他前来取画的吧！"</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩2_2_2')">下一步</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩2_2_2" class="scene scene-content">
+            <div class="dialogue">
+                <p>画师听完，频频点头，哈哈大笑说到："果然是故人之子，有故人之风啊！"</p>
+                <p>说罢，他举起了手中的画笔，朝着窗边卧榻的位置挥了一挥。你看见自己的身体安详地躺在榻上。</p>
+                <p>只见画师又蘸了点墨汁，往你的身上甩来，你看见自己的灵魂随着墨点慢慢化开，渐渐消失。</p>
+                <p>当你再一次睁开双眼之时，你已经回到了自己的肉身。你谢过画师，带着那幅画，离开了扶韵轩。</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('扶韵轩2_2增1')">下一步</button>
+            </div>
+        </div>
+
+        <div id="扶韵轩2_2增1" class="scene scene-content">
+            <div class="dialogue">
+                <p>你得到了"要交给大琴师的画作一幅"</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+        </div>
+
+        <!-- 离开页面 -->
+        <div id="next-point" class="scene scene-content">
+            <div class="dialogue">
+                <p>请前往下一点位</p>
+                <p>联系DM！</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 场景切换函数
+        function showScene(sceneId) {
+            document.querySelectorAll('.scene-content').forEach(scene => {
+                scene.classList.remove('active');
+            });
+            document.getElementById(sceneId).classList.add('active');
+        }
+
+        // 音乐控制逻辑
+        const musicControl = document.getElementById('musicControl');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        musicControl.onclick = () => {
+            backgroundMusic.paused ? backgroundMusic.play() : backgroundMusic.pause();
+            musicControl.querySelector('#musicIcon').textContent = backgroundMusic.paused ? '▶' : '⏸';
+        };
+
+        // 云雾效果
+        function createFog() {
+            const fog = document.querySelector('.fog');
+            for (let i = 0; i < 10; i++) {
+                const fogElement = document.createElement('div');
+                fogElement.style.position = 'fixed';
+                fogElement.style.top = Math.random() * 100 + 'vh';
+                fogElement.style.left = Math.random() * 100 + 'vw';
+                fogElement.style.width = Math.random() * 300 + 100 + 'px';
+                fogElement.style.height = Math.random() * 200 + 100 + 'px';
+                fogElement.style.background = 'rgba(255, 255, 255, 0.1)';
+                fogElement.style.borderRadius = '50%';
+                fogElement.style.animation = 'float ' + (Math.random() * 20 + 30) + 's linear infinite';
+                fogElement.style.zIndex = '-1';
+                fog.appendChild(fogElement);
+            }
+        }
+
+        // 添加浮动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(50px, 20px) rotate(5deg); }
+                50% { transform: translate(0, 50px) rotate(0deg); }
+                75% { transform: translate(-50px, 20px) rotate(-5deg); }
+                100% { transform: translate(0, 0) rotate(0deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 页面加载完成后创建云雾
+        window.addEventListener('load', createFog);
+    </script>
+</body>
+</html>

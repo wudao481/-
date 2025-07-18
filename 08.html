@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遗音天书 - 紫来洞内·赏画琴师</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
+            font-family: 'SimSun', 'STSong', serif;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+        .fog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(128, 216, 255, 0.3);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            color: #f8f8f8;
+            text-shadow: 0 0 10px rgba(128, 216, 255, 0.8), 0 0 20px rgba(128, 216, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        .scene {
+            background: rgba(10, 25, 47, 0.75);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .scene:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            opacity: 0.15;
+            border-radius: 10px;
+            z-index: -1;
+        }
+        /* 不同场景的背景图 */
+        #紫来洞内主场景:before {
+            background-image: url('https://picsum.photos/id/190/800/600');
+            background-position: center;
+        }
+        #紫来洞内1:before {
+            background-image: url('https://picsum.photos/id/195/800/600');
+            background-position: center;
+        }
+        #紫来洞内1增1:before {
+            background-image: url('https://picsum.photos/id/200/800/600');
+            background-position: center;
+        }
+        .dialogue {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+        }
+        .choices {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .choice-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 20px;
+            color: #e0e0e0;
+            font-family: 'SimSun', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .choice-btn:hover {
+            background: rgba(128, 216, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+        /* 添加完成任务按钮样式 */
+        .exit-btn {
+            background-color: #ffd700;
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 8px 16px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        .scene-content { display: none; }
+        .scene-content.active { display: block; animation: fadeIn 1s ease; }
+        .clue-card {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #ffd700;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="fog"></div>
+    <!-- 音乐控制组件 -->
+    <div class="music-control" id="musicControl">
+        <span id="musicIcon">▶</span>
+    </div>
+    <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+
+    <div class="container">
+        <header>
+            <h1>遗音天书</h1>
+            <p>玉皇飞云 · 紫来洞内</p>
+        </header>
+
+        <!-- 主场景：紫来洞内 -->
+        <div id="紫来洞内主场景" class="scene scene-content active">
+            <div class="dialogue">
+                <p>你找回了自己的肉身，并从扶韵轩带回了一张画像。</p>
+                <p>大琴师：“此画像何处得来！……” </p>
+                <p>大琴师话音未落，便化作一团紫气消散了。</p>
+                <p>你正在懵圈，忽然一阵狂风骤雨侵袭而来……一位白发男子踩着玄光而来。</p>
+                <p>你手中的画卷，瞬间被他夺走。白发男子说到：“墨心妄动凡念，该有此劫。”</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1')">救师父</button>
+                <button class="choice-btn" onclick="showScene('紫来洞内2')">抢画</button>
+            </div>
+        </div>
+
+        <!-- 主1.紫来洞内1分支 -->
+        <div id="紫来洞内1" class="scene scene-content">
+            <div class="dialogue">
+                <p>你虽然不明白白发男子的意思，但是你选择救师父。</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1_1')">下一步</button>
+            </div>
+        </div>
+
+        <div id="紫来洞内1_1" class="scene scene-content">
+            <div class="dialogue">
+                <p>在大琴师的琴被神抱起的瞬间，你运用大琴师教你的功夫，藏魂于琴。然而，你却被困在琴中，出不来了。</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1增1')">下一步</button>
+            </div>
+        </div>
+
+        <div id="紫来洞内1增1" class="scene scene-content">
+            <div class="dialogue">
+                <p>你怎么办？</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1_2_1')">砸毁琴</button>
+                <button class="choice-btn" onclick="showScene('紫来洞内1_2')">继续探索</button>
+            </div>
+        </div>
+
+        <div id="紫来洞内1_2_1" class="scene scene-content">
+            <div class="dialogue">
+                <p>砸毁琴，也等于毁掉了大琴师的全部修为。但是，此刻的你，根本就没有砸琴的实力。</p>
+                
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1_2')">下一步</button>
+            </div>
+        </div>
+
+        <div id="紫来洞内1_2" class="scene scene-content">
+            <div class="dialogue">
+                <p>你在琴中，仿佛被困万年。万年的时间里，你已经把那个黑暗混沌的世界，建立成了一个美好的新世界。</p>
+                <p>突然有一天，你创造的世界里，出现了一个陌生的白衣男子……</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1_2_2')">下一步</button>
+            </div>
+        </div>
+
+        <div id="紫来洞内1_2_2" class="scene scene-content">
+            <div class="dialogue">
+                <p>白衣男子：“你成功了。那里的世界交给你，我便放心了。去吧，去把那个世界变得更好！孩子。”</p>
+                <p>你的选择？</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1_2_2_1')">打他，询问大琴师的下落</button>
+                <button class="choice-btn" onclick="showScene('紫来洞内1_2_2_2')">继续恭维他，探究真实身份</button>
+            </div>
+        </div>
+
+        <div id="紫来洞内1_2_2_1" class="scene scene-content">
+            <div class="dialogue">
+                <p>白衣男子：“哈哈哈哈哈……你的师父，不是一直都在吗！”</p>
+                <p>你从紫来洞的石床上被师父叫醒，如梦初醒。你抱着大琴师放声大哭。</p>
+                <p>大琴师摸着你的头，安慰到：“时间不多了。瘴气的源头在西湖上的集贤亭。它的周围被文书和葛宏联手施了七星阵。你既得我墨心真传，便可解得缚神操最后一段。只是，最后一段的琴谱在雷峰塔顶的藏经阁中，需要你自己去取。”</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1.2.1增1')">下一步</button>
+            </div>
+        </div>
+
+        <div id="紫来洞内1.2.1增1" class="scene scene-content">
+            <div class="dialogue">
+                <p>你的选择？</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1.2.1.1')">独自离开</button>
+                <button class="choice-btn" onclick="showScene('紫来洞内1.2.1.2')">请求墨心同行</button>
+            </div>
+        </div>
+
+        <div id="紫来洞内1.2.1.1" class="scene scene-content">
+            <div class="dialogue">
+                <p>你得到了墨心所赠的墨琴一张、纹章一枚以及信笺一封。</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+        </div>
+
+        <div id="紫来洞内1.2.1.2" class="scene scene-content">
+            <div class="dialogue">
+                <p>墨心：“我不能离开这里。但是我可以给你我的法器，助你一臂之力。”</p>
+                <p>你得到了墨心所赠的墨琴一张、纹章一枚以及信笺一封。</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+        </div>
+
+        <div id="紫来洞内1_2_2_2" class="scene scene-content">
+            <div class="dialogue">
+                <p>白衣男子：“回去吧。我的身份，不是你应该知道的。”</p>
+                <p>白衣男子说完就消失不见了。你周围的一切也都瞬间坍塌。墨心重新出现在了你的面前。</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1.2.1增1')">下一步</button>
+            </div>
+        </div>
+
+        <!-- 主1.紫来洞内2分支 -->
+        <div id="紫来洞内2" class="scene scene-content">
+            <div class="dialogue">
+                <p>你虽然不明白白发男子的意思，但是你知道墨心恐怕是因为那幅画才有此劫。你上去抢画。</p>
+                <p>谁知，你竟然跟那幅画一起被白发男子困于琴中，出不来了。你怎么办？</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('紫来洞内1增1')">下一步</button>
+            </div>
+        </div>
+
+        <!-- 离开页面 -->
+        <div id="next-point" class="scene scene-content">
+            <div class="dialogue">
+                <p>请前往下一点位</p>
+                <p>联系DM！</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 场景切换函数
+        function showScene(sceneId) {
+            document.querySelectorAll('.scene-content').forEach(scene => {
+                scene.classList.remove('active');
+            });
+            document.getElementById(sceneId).classList.add('active');
+        }
+
+        // 音乐控制逻辑
+        const musicControl = document.getElementById('musicControl');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        musicControl.onclick = () => {
+            backgroundMusic.paused ? backgroundMusic.play() : backgroundMusic.pause();
+            musicControl.querySelector('#musicIcon').textContent = backgroundMusic.paused ? '▶' : '⏸';
+        };
+
+        // 云雾效果
+        function createFog() {
+            const fog = document.querySelector('.fog');
+            for (let i = 0; i < 10; i++) {
+                const fogElement = document.createElement('div');
+                fogElement.style.position = 'fixed';
+                fogElement.style.top = Math.random() * 100 + 'vh';
+                fogElement.style.left = Math.random() * 100 + 'vw';
+                fogElement.style.width = Math.random() * 300 + 100 + 'px';
+                fogElement.style.height = Math.random() * 200 + 100 + 'px';
+                fogElement.style.background = 'rgba(255, 255, 255, 0.1)';
+                fogElement.style.borderRadius = '50%';
+                fogElement.style.animation = 'float ' + (Math.random() * 20 + 30) + 's linear infinite';
+                fogElement.style.zIndex = '-1';
+                fog.appendChild(fogElement);
+            }
+        }
+
+        // 添加浮动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(50px, 20px) rotate(5deg); }
+                50% { transform: translate(0, 50px) rotate(0deg); }
+                75% { transform: translate(-50px, 20px) rotate(-5deg); }
+                100% { transform: translate(0, 0) rotate(0deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 页面加载完成后创建云雾
+        window.addEventListener('load', createFog);
+    </script>
+</body>
+</html>
