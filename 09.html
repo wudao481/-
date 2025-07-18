@@ -95,289 +95,265 @@
         @keyframes float { 0% { transform: translateY(0px); opacity: 0.8; } 50% { transform: translateY(-15px); opacity: 1; } 100% { transform: translateY(0px); opacity: 0.8; } }
         .round-indicator { text-align: center; margin: 10px 0; color: #80d8ff; }
         
-        /* 新增启动画面样式 */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            cursor: pointer;
-        }
-        #splash-screen img {
-            max-width: 90%;
-            max-height: 90%;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.5);
-        }
-    </style>
-</head>
-<body>
-    <!-- 新增启动画面 -->
-    <div id="splash-screen">
-        <img src="三元荣光尘土钱塘.jpg" alt="启动画面" onclick="hideSplashScreen()">
-    </div>
-    <div class="music-control" id="musicControl">
-        <span id="musicIcon">▶</span>
-    </div>
-    <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
-    <div class="fog"></div>
-    <div class="miasma"></div>
-    <div class="modal-overlay" id="heavenlyChildModal">
-        <div class="modal-content">
-            <p class="modal-text">天命之子！你获得了特殊庇佑！直接进入下一阶段剧情。</p>
-            <div style="text-align: center;"><button class="close-modal" onclick="document.getElementById('heavenlyChildModal').classList.remove('active'); showScene('huangbang06');">知晓了</button></div>
-        </div>
-    </div>
-    <div class="container">
-        <header><h1>皇榜-除瘴任务</h1><p>新手任务 · 钱塘初瘴</p></header>
-
-        <!-- 初始场景 -->
-        <div id="intro-scene" class="scene scene-content active">
-            <div class="dialogue">
-                <p>你来到集贤亭，这里本应是西湖最清嘉的一隅：</p>
-                <p>柳浪层层，荷香细细，往日文人飞觞、歌姬擘阮之声，如今只剩一片死寂。</p>
-                <p>才过辰牌，天色却像被湿灰的绢重重蒙住，日光透不进半分。亭柱朱漆剥落处，渗出黄褐水痕，仿佛老木也在泣血。</p>
-                <p>脚下一踏，落叶碎作黑粉，竟带着微温。</p>
-                <p>湖面早失却潋滟之态，凝成一块浑浊的铅镜；偶有水禽掠起，羽翼竟滴下暗绿浆液，落入湖心，便激起一缕缕灰白烟泡，腥甜刺鼻，令人胸臆闷胀。</p>
-                <p>再望远处，城墙、南屏诸山只剩影影绰绰的轮廓，仿佛被一只巨手拖入昏雾。</p>
-                <p>那雾并非寻常湿冷，而带温暾黏腻之感，触肤如掺了细糖的沸油，顷刻便叫人汗出如浆，却止不住心底发寒。</p>
-                <p>低头看袖角，已染上点点苍斑，像霉又似锈，轻轻一捻，便散成更细的尘，顺着指缝往皮肉里钻。</p>
-                <p>此刻，你才真心明白：瘴气已非“气”，而是一只有形的毒兽，正伏在钱塘的每一寸空隙里，舔噬呼吸。</p>
+        /* 已移除启动画面样式 */
+        </style>
+        </head>
+        <body>
+            <!-- 已移除启动画面代码 -->
+            <div class="music-control" id="musicControl">
+                <span id="musicIcon">▶</span>
             </div>
-            <div class="choices"><button class="choice-btn" onclick="showScene('huangbang01')">继续探查</button></div>
-        </div>
-
-        <!-- 皇榜0.1 -->
-        <div id="huangbang01-scene" class="scene scene-content">
-            <div class="dialogue">
-                <p>你眉心一紧，喉头泛起一股铁锈般的腥甘，唾沫刮过砂粒，舌底渗出酸水，带着腐败荷花的臭味。你感到胸口微有异动，莫不是刚才所求的签文作怪？</p>
-            </div>
-            <div class="choices"><button class="choice-btn" onclick="showScene('huangbang02')">你掏出签文看了一下</button></div>
-        </div>
-
-        <!-- 皇榜0.2 -->
-        <div id="huangbang02-scene" class="scene scene-content">
-            <div class="dialogue">
-                <p>你还来不及再细看签文内容，双眼就被瘴气所谜。你感到手指一凉，胸口像被一只湿重的手掌按住，呼吸只能进到半截，便被迫倒卷回去，发出极轻的“咈咈”声。签文落地，你也倒下了。</p>
-            </div>
-            <div class="choices"><button class="choice-btn" onclick="showScene('huangbang03')">一阵突如其来的寒颤，你听见了孩童的笑声……</button></div>
-        </div>
-
-        <!-- 皇榜0.3 -->
-        <div id="huangbang03-scene" class="scene scene-content">
-            <div class="dialogue">
-                <p>模糊中，你看到一名白发童子，出现在了你的胸口。他正坐在你的身上对你嗤笑。孩童道：“呵呵，又来了一个废物！也不知道这心好不好吃？”孩童说着就伸手来掏你的心窝。你的胸口再次传来异动……</p>
-            </div>
-            <div class="choices">
-                <button class="choice-btn" onclick="showScene('huangbang04')">你选择伸手抓住那只探入胸口的手</button>
-                <button class="choice-btn" onclick="showScene('huangbang04')">你选择运功抵御</button>
-            </div>
-        </div>
-
-        <!-- 皇榜0.4 -->
-        <div id="huangbang04-scene" class="scene scene-content">
-            <div class="dialogue">
-                <p>你决定抵御！</p>
-                <div class="round-indicator" id="roundIndicator">投出大（11-18点）即为赢，小（3-10点）即为输</div>
-                <div class="dice-container">
-                    <div class="dice" id="dice1"></div>
-                    <div class="dice" id="dice2"></div>
-                    <div class="dice" id="dice3"></div>
+            <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+            <div class="fog"></div>
+            <div class="miasma"></div>
+            <div class="modal-overlay" id="heavenlyChildModal">
+                <div class="modal-content">
+                    <p class="modal-text">天命之子！你获得了特殊庇佑！直接进入下一阶段剧情。</p>
+                    <div style="text-align: center;"><button class="close-modal" onclick="document.getElementById('heavenlyChildModal').classList.remove('active'); showScene('huangbang06');">知晓了</button></div>
                 </div>
-                <div id="dice-result" class="dice-result"></div>
             </div>
-            <div class="choices"><button class="choice-btn" id="roll-dice-btn">掷骰</button></div>
-        </div>
+            <div class="container">
+                <header><h1>皇榜-除瘴任务</h1><p>新手任务 · 钱塘初瘴</p></header>
 
-        <!-- 皇榜0.5 -->
-        <div id="huangbang05-scene" class="scene scene-content">
-            <div class="dialogue">
-                <p>你的真炁开始溃散！怎么办？！胸口再次传来异动，你想起随身携带的护身符。</p>
+                <!-- 初始场景 -->
+                <div id="intro-scene" class="scene scene-content active">
+                    <div class="dialogue">
+                        <p>你来到集贤亭，这里本应是西湖最清嘉的一隅：</p>
+                        <p>柳浪层层，荷香细细，往日文人飞觞、歌姬擘阮之声，如今只剩一片死寂。</p>
+                        <p>才过辰牌，天色却像被湿灰的绢重重蒙住，日光透不进半分。亭柱朱漆剥落处，渗出黄褐水痕，仿佛老木也在泣血。</p>
+                        <p>脚下一踏，落叶碎作黑粉，竟带着微温。</p>
+                        <p>湖面早失却潋滟之态，凝成一块浑浊的铅镜；偶有水禽掠起，羽翼竟滴下暗绿浆液，落入湖心，便激起一缕缕灰白烟泡，腥甜刺鼻，令人胸臆闷胀。</p>
+                        <p>再望远处，城墙、南屏诸山只剩影影绰绰的轮廓，仿佛被一只巨手拖入昏雾。</p>
+                        <p>那雾并非寻常湿冷，而带温暾黏腻之感，触肤如掺了细糖的沸油，顷刻便叫人汗出如浆，却止不住心底发寒。</p>
+                        <p>低头看袖角，已染上点点苍斑，像霉又似锈，轻轻一捻，便散成更细的尘，顺着指缝往皮肉里钻。</p>
+                        <p>此刻，你才真心明白：瘴气已非“气”，而是一只有形的毒兽，正伏在钱塘的每一寸空隙里，舔噬呼吸。</p>
+                    </div>
+                    <div class="choices"><button class="choice-btn" onclick="showScene('huangbang01')">继续探查</button></div>
+                </div>
+
+                <!-- 皇榜0.1 -->
+                <div id="huangbang01-scene" class="scene scene-content">
+                    <div class="dialogue">
+                        <p>你眉心一紧，喉头泛起一股铁锈般的腥甘，唾沫刮过砂粒，舌底渗出酸水，带着腐败荷花的臭味。你感到胸口微有异动，莫不是刚才所求的签文作怪？</p>
+                    </div>
+                    <div class="choices"><button class="choice-btn" onclick="showScene('huangbang02')">你掏出签文看了一下</button></div>
+                </div>
+
+                <!-- 皇榜0.2 -->
+                <div id="huangbang02-scene" class="scene scene-content">
+                    <div class="dialogue">
+                        <p>你还来不及再细看签文内容，双眼就被瘴气所谜。你感到手指一凉，胸口像被一只湿重的手掌按住，呼吸只能进到半截，便被迫倒卷回去，发出极轻的“咈咈”声。签文落地，你也倒下了。</p>
+                    </div>
+                    <div class="choices"><button class="choice-btn" onclick="showScene('huangbang03')">一阵突如其来的寒颤，你听见了孩童的笑声……</button></div>
+                </div>
+
+                <!-- 皇榜0.3 -->
+                <div id="huangbang03-scene" class="scene scene-content">
+                    <div class="dialogue">
+                        <p>模糊中，你看到一名白发童子，出现在了你的胸口。他正坐在你的身上对你嗤笑。孩童道：“呵呵，又来了一个废物！也不知道这心好不好吃？”孩童说着就伸手来掏你的心窝。你的胸口再次传来异动……</p>
+                    </div>
+                    <div class="choices">
+                        <button class="choice-btn" onclick="showScene('huangbang04')">你选择伸手抓住那只探入胸口的手</button>
+                        <button class="choice-btn" onclick="showScene('huangbang04')">你选择运功抵御</button>
+                    </div>
+                </div>
+
+                <!-- 皇榜0.4 -->
+                <div id="huangbang04-scene" class="scene scene-content">
+                    <div class="dialogue">
+                        <p>你决定抵御！</p>
+                        <div class="round-indicator" id="roundIndicator">投出大（11-18点）即为赢，小（3-10点）即为输</div>
+                        <div class="dice-container">
+                            <div class="dice" id="dice1"></div>
+                            <div class="dice" id="dice2"></div>
+                            <div class="dice" id="dice3"></div>
+                        </div>
+                        <div id="dice-result" class="dice-result"></div>
+                    </div>
+                    <div class="choices"><button class="choice-btn" id="roll-dice-btn">掷骰</button></div>
+                </div>
+
+                <!-- 皇榜0.5 -->
+                <div id="huangbang05-scene" class="scene scene-content">
+                    <div class="dialogue">
+                        <p>你的真炁开始溃散！怎么办？！胸口再次传来异动，你想起随身携带的护身符。</p>
+                    </div>
+                    <div class="choices">
+                        <button class="choice-btn" onclick="showScene('huangbang06')">幸好你会皋陶咒！赶紧念！</button>
+                        <button class="choice-btn" onclick="showScene('huangbang06')">临时抱佛脚，也是拜！祈祷吧！</button>
+                    </div>
+                </div>
+
+                <!-- 皇榜0.6 -->
+                <div id="huangbang06-scene" class="scene scene-content">
+                    <div class="dialogue">
+                        <p class="incantation">皋陶明神在上，獬豸昭鉴：弟子今陷钱塘毒瘴，五内如焚，乞赐神角一触，分阴判阳，俾瘴消魄定，得全微命，誓不敢妄施符水，有负神律……</p>
+                        <p>一阵祈祷之后，符纸从你身上飘出，不偏不倚，正触那白发童子的额心。“嗤”的一声，火舌骤起，却不是寻常赤焰。一道青白幽光从符纹里迸出獬豸之形，角尾分明，只一瞬便贯入童子眉心。</p>
+                        <p>火光所照，童子肌肤下隐隐有黑雾奔突，似百十条小蛇乱窜，却被那独角一一钉住。青焰愈炽，童子的形影便愈淡，白发先化作飞灰，衣袂继而成烟，最后连一声呜咽都未及出口，便与符灰一同散入瘴霾。</p>
+                        <p>此时，你看见一张老旧的帛书碎片，从童子消失处飘落下来……</p>
+                        <div class="silk-book">📜 帛书碎片飘落</div>
+                    </div>
+                    <div class="choices"><button class="choice-btn" onclick="showScene('huangbang07')">你捡起了地上的帛书碎片。</button></div>
+                </div>
+
+                <!-- 皇榜0.7 -->
+                <div id="huangbang07-scene" class="scene scene-content">
+                    <div class="dialogue">
+                        <p>周遭湿重的雾气已微微松动，仿佛一只无形巨兽被利刃挑开鳞甲，露出一线清冷天光。帛书残片在倏忽之间，飞入云层，你寻迹望去，帛书消失的地方，似乎是【吟潮驿】</p>
+                    </div>
+                    <div class="choices"><button class="choice-btn" onclick="showScene('conclusion')">你趁著片刻清醒，立刻逃了出来。</button></div>
+                </div>
+
+                <!-- 结案陈词 -->
+                <div id="conclusion-scene" class="scene scene-content">
+                    <div class="dialogue">
+                        <p>看来，这瘴气十分厉害。你心知以目下微末道行，再进半步，必为毒瘴所噬；而那帛书残片字迹却分明出自《遗音天书》——此物既现，瘴根已得佐证。你敛神收息，决定前往吟潮驿，一来稍作休整，一来查探帛书踪迹，徐图后策。</p>
+                        <p style="color: #ffd700; text-align: center; margin-top: 20px;">｛恭喜已破初瘴！即刻截图本页，飞符呈交DM，换取帛书残片·其一。下一段密径已悄然开启，百鬼潜行，龙脉翻腾。是生，是死，抑或一步登霄？且看你敢不敢来！｝</p>
+                    </div>
+                    <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交截图')">完成任务</button></div>
+                </div>
+
+                <div class="footer"><p>风云钱塘 · 湖滨印象</p></div>
             </div>
-            <div class="choices">
-                <button class="choice-btn" onclick="showScene('huangbang06')">幸好你会皋陶咒！赶紧念！</button>
-                <button class="choice-btn" onclick="showScene('huangbang06')">临时抱佛脚，也是拜！祈祷吧！</button>
-            </div>
-        </div>
 
-        <!-- 皇榜0.6 -->
-        <div id="huangbang06-scene" class="scene scene-content">
-            <div class="dialogue">
-                <p class="incantation">皋陶明神在上，獬豸昭鉴：弟子今陷钱塘毒瘴，五内如焚，乞赐神角一触，分阴判阳，俾瘴消魄定，得全微命，誓不敢妄施符水，有负神律……</p>
-                <p>一阵祈祷之后，符纸从你身上飘出，不偏不倚，正触那白发童子的额心。“嗤”的一声，火舌骤起，却不是寻常赤焰。一道青白幽光从符纹里迸出獬豸之形，角尾分明，只一瞬便贯入童子眉心。</p>
-                <p>火光所照，童子肌肤下隐隐有黑雾奔突，似百十条小蛇乱窜，却被那独角一一钉住。青焰愈炽，童子的形影便愈淡，白发先化作飞灰，衣袂继而成烟，最后连一声呜咽都未及出口，便与符灰一同散入瘴霾。</p>
-                <p>此时，你看见一张老旧的帛书碎片，从童子消失处飘落下来……</p>
-                <div class="silk-book">📜 帛书碎片飘落</div>
-            </div>
-            <div class="choices"><button class="choice-btn" onclick="showScene('huangbang07')">你捡起了地上的帛书碎片。</button></div>
-        </div>
-
-        <!-- 皇榜0.7 -->
-        <div id="huangbang07-scene" class="scene scene-content">
-            <div class="dialogue">
-                <p>周遭湿重的雾气已微微松动，仿佛一只无形巨兽被利刃挑开鳞甲，露出一线清冷天光。帛书残片在倏忽之间，飞入云层，你寻迹望去，帛书消失的地方，似乎是【吟潮驿】</p>
-            </div>
-            <div class="choices"><button class="choice-btn" onclick="showScene('conclusion')">你趁著片刻清醒，立刻逃了出来。</button></div>
-        </div>
-
-        <!-- 结案陈词 -->
-        <div id="conclusion-scene" class="scene scene-content">
-            <div class="dialogue">
-                <p>看来，这瘴气十分厉害。你心知以目下微末道行，再进半步，必为毒瘴所噬；而那帛书残片字迹却分明出自《遗音天书》——此物既现，瘴根已得佐证。你敛神收息，决定前往吟潮驿，一来稍作休整，一来查探帛书踪迹，徐图后策。</p>
-                <p style="color: #ffd700; text-align: center; margin-top: 20px;">｛恭喜已破初瘴！即刻截图本页，飞符呈交DM，换取帛书残片·其一。下一段密径已悄然开启，百鬼潜行，龙脉翻腾。是生，是死，抑或一步登霄？且看你敢不敢来！｝</p>
-            </div>
-            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交截图')">完成任务</button></div>
-        </div>
-
-        <div class="footer"><p>风云钱塘 · 湖滨印象</p></div>
-    </div>
-
-    <script>
-        // 新增：隐藏启动画面函数
-        function hideSplashScreen() {
-            document.getElementById('splash-screen').style.display = 'none';
-        }
-        
-        // 创建云雾效果
-        function createFog() {
-            const fog = document.querySelector('.fog');
-            for (let i = 0; i < 20; i++) {
-                const fogElement = document.createElement('div');
-                fogElement.style.position = 'absolute';
-                fogElement.style.width = `${Math.random() * 300 + 100}px`;
-                fogElement.style.height = `${Math.random() * 200 + 100}px`;
-                fogElement.style.background = `rgba(255, 255, 255, ${Math.random() * 0.1 + 0.05})`;
-                fogElement.style.borderRadius = '50%';
-                fogElement.style.top = `${Math.random() * 100}%`;
-                fogElement.style.left = `${Math.random() * 100}%`;
-                fogElement.style.animation = `float ${Math.random() * 30 + 20}s linear infinite`;
-                fog.appendChild(fogElement);
-            }
-        }
-
-        // 场景切换功能
-        function showScene(sceneName) {
-            document.querySelectorAll('.scene-content').forEach(scene => scene.classList.remove('active'));
-            let targetScene = document.getElementById(`${sceneName}-scene`);
-            targetScene.classList.add('active');
-            window.scrollTo(0, 0);
-        }
-
-        // 骰子功能
-        let currentRound = 1;
-        const rollDiceBtn = document.getElementById('roll-dice-btn');
-        const dice1 = document.getElementById('dice1');
-        const dice2 = document.getElementById('dice2');
-        const dice3 = document.getElementById('dice3');
-        const diceResult = document.getElementById('dice-result');
-        const roundIndicator = document.getElementById('roundIndicator');
-
-        if (rollDiceBtn && dice1 && dice2 && dice3 && diceResult) {
-            rollDiceBtn.addEventListener('click', () => {
-                rollDiceBtn.disabled = true;
-                rollDiceBtn.textContent = '掷骰中...';
-                diceResult.textContent = '';
-                dice1.classList.add('rolling');
-                dice2.classList.add('rolling');
-                dice3.classList.add('rolling');
-
-                setTimeout(() => {
-                    const result1 = Math.floor(Math.random() * 6) + 1;
-                    const result2 = Math.floor(Math.random() * 6) + 1;
-                    const result3 = Math.floor(Math.random() * 6) + 1;
-                    const total = result1 + result2 + result3;
-
-                    dice1.textContent = result1;
-                    dice2.textContent = result2;
-                    dice3.textContent = result3;
-                    dice1.classList.remove('rolling');
-                    dice2.classList.remove('rolling');
-                    dice3.classList.remove('rolling');
-
-                    if (currentRound === 1) {
-                        // 第一轮判定：大(11-18)小(3-10)
-                        if (total >= 11 && total <= 18) {
-                            diceResult.textContent = `结果: ${result1}, ${result2}, ${result3}，总和${total}点 (大)，你赢了！`;
-                            diceResult.style.color = '#00FFFF';
-                            currentRound = 2;
-                            roundIndicator.textContent = '白发童子认真起来了，你必须投出三个六才能赢';
-                            rollDiceBtn.disabled = false;
-                            rollDiceBtn.textContent = '再次掷骰';
-                        } else {
-                            diceResult.textContent = `结果: ${result1}, ${result2}, ${result3}，总和${total}点 (小)，实力不济，未能制止孩童对你的侵犯！`;
-                            diceResult.style.color = '#F44336';
-                            setTimeout(() => showScene('huangbang05'), 2000);
-                        }
-                    } else {
-                        // 第二轮判定：必须三个六
-                        if (result1 === 6 && result2 === 6 && result3 === 6) {
-                            diceResult.textContent = `结果: ${result1}, ${result2}, ${result3}，三个六！天命之子！`;
-                            diceResult.style.color = '#FFD700';
-                            setTimeout(() => {
-                                document.getElementById('heavenlyChildModal').classList.add('active');
-                            }, 1000);
-                        } else {
-                            diceResult.textContent = `结果: ${result1}, ${result2}, ${result3}，未能投出三个六，进入下一场景`;
-                            diceResult.style.color = '#F44336';
-                            setTimeout(() => showScene('huangbang05'), 2000);
-                        }
-                        currentRound = 1; // 重置为第一轮
-                        roundIndicator.textContent = '投出大（11-18点）即为赢，小（3-10点）即为输';
-                        rollDiceBtn.disabled = false;
-                        rollDiceBtn.textContent = '掷骰';
+            <script>
+                // 已移除隐藏启动画面函数
+                
+                // 创建云雾效果
+                function createFog() {
+                    const fog = document.querySelector('.fog');
+                    for (let i = 0; i < 20; i++) {
+                        const fogElement = document.createElement('div');
+                        fogElement.style.position = 'absolute';
+                        fogElement.style.width = `${Math.random() * 300 + 100}px`;
+                        fogElement.style.height = `${Math.random() * 200 + 100}px`;
+                        fogElement.style.background = `rgba(255, 255, 255, ${Math.random() * 0.1 + 0.05})`;
+                        fogElement.style.borderRadius = '50%';
+                        fogElement.style.top = `${Math.random() * 100}%`;
+                        fogElement.style.left = `${Math.random() * 100}%`;
+                        fogElement.style.animation = `float ${Math.random() * 30 + 20}s linear infinite`;
+                        fog.appendChild(fogElement);
                     }
-                }, 1500);
-            });
-        }
-
-        // 音乐控制功能
-        const musicControl = document.getElementById('musicControl');
-        const musicIcon = document.getElementById('musicIcon');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        let isPlaying = false;
-
-        musicIcon.textContent = '▶';
-        musicControl.addEventListener('click', () => {
-            if (isPlaying) {
-                backgroundMusic.pause();
-                musicIcon.textContent = '▶';
-            } else {
-                backgroundMusic.play().then(() => musicIcon.textContent = '⏸').catch(err => {
-                    alert('请点击允许播放音频');
-                    console.log('播放失败:', err);
-                });
-            }
-            isPlaying = !isPlaying;
-        });
-
-        // 添加云雾动画
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes float { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 50 - 25}px) scale(${Math.random() * 0.5 + 0.8}); } 100% { transform: translate(0, 0) scale(1); } }
-        `;
-        document.head.appendChild(style);
-
-        // 初始化
-        createFog();
-        window.addEventListener('load', function() {
-            const scenes = document.querySelectorAll('.scene');
-            scenes.forEach(scene => {
-                const hasButtons = scene.querySelector('.choice-btn') !== null;
-                const isExitPage = scene.id === 'conclusion-scene';
-                if (!hasButtons && !isExitPage) {
-                    const exitBtn = document.createElement('button');
-                    exitBtn.textContent = '离开';
-                    exitBtn.className = 'exit-btn';
-                    exitBtn.onclick = function() { alert('请完成当前任务后再离开'); };
-                    scene.appendChild(exitBtn);
                 }
-            });
-        });
-    </script>
-</body>
-</html>
+
+                // 场景切换功能
+                function showScene(sceneName) {
+                    document.querySelectorAll('.scene-content').forEach(scene => scene.classList.remove('active'));
+                    let targetScene = document.getElementById(`${sceneName}-scene`);
+                    targetScene.classList.add('active');
+                    window.scrollTo(0, 0);
+                }
+
+                // 骰子功能
+                let currentRound = 1;
+                const rollDiceBtn = document.getElementById('roll-dice-btn');
+                const dice1 = document.getElementById('dice1');
+                const dice2 = document.getElementById('dice2');
+                const dice3 = document.getElementById('dice3');
+                const diceResult = document.getElementById('dice-result');
+                const roundIndicator = document.getElementById('roundIndicator');
+
+                if (rollDiceBtn && dice1 && dice2 && dice3 && diceResult) {
+                    rollDiceBtn.addEventListener('click', () => {
+                        rollDiceBtn.disabled = true;
+                        rollDiceBtn.textContent = '掷骰中...';
+                        diceResult.textContent = '';
+                        dice1.classList.add('rolling');
+                        dice2.classList.add('rolling');
+                        dice3.classList.add('rolling');
+
+                        setTimeout(() => {
+                            const result1 = Math.floor(Math.random() * 6) + 1;
+                            const result2 = Math.floor(Math.random() * 6) + 1;
+                            const result3 = Math.floor(Math.random() * 6) + 1;
+                            const total = result1 + result2 + result3;
+
+                            dice1.textContent = result1;
+                            dice2.textContent = result2;
+                            dice3.textContent = result3;
+                            dice1.classList.remove('rolling');
+                            dice2.classList.remove('rolling');
+                            dice3.classList.remove('rolling');
+
+                            if (currentRound === 1) {
+                                // 第一轮判定：大(11-18)小(3-10)
+                                if (total >= 11 && total <= 18) {
+                                    diceResult.textContent = `结果: ${result1}, ${result2}, ${result3}，总和${total}点 (大)，你赢了！`;
+                                    diceResult.style.color = '#00FFFF';
+                                    currentRound = 2;
+                                    roundIndicator.textContent = '白发童子认真起来了，你必须投出三个六才能赢';
+                                    rollDiceBtn.disabled = false;
+                                    rollDiceBtn.textContent = '再次掷骰';
+                                } else {
+                                    diceResult.textContent = `结果: ${result1}, ${result2}, ${result3}，总和${total}点 (小)，实力不济，未能制止孩童对你的侵犯！`;
+                                    diceResult.style.color = '#F44336';
+                                    setTimeout(() => showScene('huangbang05'), 2000);
+                                }
+                            } else {
+                                // 第二轮判定：必须三个六
+                                if (result1 === 6 && result2 === 6 && result3 === 6) {
+                                    diceResult.textContent = `结果: ${result1}, ${result2}, ${result3}，三个六！天命之子！`;
+                                    diceResult.style.color = '#FFD700';
+                                    setTimeout(() => {
+                                        document.getElementById('heavenlyChildModal').classList.add('active');
+                                    }, 1000);
+                                } else {
+                                    diceResult.textContent = `结果: ${result1}, ${result2}, ${result3}，未能投出三个六，进入下一场景`;
+                                    diceResult.style.color = '#F44336';
+                                    setTimeout(() => showScene('huangbang05'), 2000);
+                                }
+                                currentRound = 1; // 重置为第一轮
+                                roundIndicator.textContent = '投出大（11-18点）即为赢，小（3-10点）即为输';
+                                rollDiceBtn.disabled = false;
+                                rollDiceBtn.textContent = '掷骰';
+                            }
+                        }, 1500);
+                    });
+                }
+
+                // 音乐控制功能
+                const musicControl = document.getElementById('musicControl');
+                const musicIcon = document.getElementById('musicIcon');
+                const backgroundMusic = document.getElementById('backgroundMusic');
+                let isPlaying = false;
+
+                musicIcon.textContent = '▶';
+                musicControl.addEventListener('click', () => {
+                    if (isPlaying) {
+                        backgroundMusic.pause();
+                        musicIcon.textContent = '▶';
+                    } else {
+                        backgroundMusic.play().then(() => musicIcon.textContent = '⏸').catch(err => {
+                            alert('请点击允许播放音频');
+                            console.log('播放失败:', err);
+                        });
+                    }
+                    isPlaying = !isPlaying;
+                });
+
+                // 添加云雾动画
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes float { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 50 - 25}px) scale(${Math.random() * 0.5 + 0.8}); } 100% { transform: translate(0, 0) scale(1); } }
+                `;
+                document.head.appendChild(style);
+
+                // 初始化
+                createFog();
+                window.addEventListener('load', function() {
+                    const scenes = document.querySelectorAll('.scene');
+                    scenes.forEach(scene => {
+                        const hasButtons = scene.querySelector('.choice-btn') !== null;
+                        const isExitPage = scene.id === 'conclusion-scene';
+                        if (!hasButtons && !isExitPage) {
+                            const exitBtn = document.createElement('button');
+                            exitBtn.textContent = '离开';
+                            exitBtn.className = 'exit-btn';
+                            exitBtn.onclick = function() { alert('请完成当前任务后再离开'); };
+                            scene.appendChild(exitBtn);
+                        }
+                    });
+                });
+            </script>
+        </body>
+        </html>
