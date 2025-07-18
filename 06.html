@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遗音天书 - 大树下的弹琴师</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
+            font-family: 'SimSun', 'STSong', serif;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+        .fog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(128, 216, 255, 0.3);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            color: #f8f8f8;
+            text-shadow: 0 0 10px rgba(128, 216, 255, 0.8), 0 0 20px rgba(128, 216, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        .scene {
+            background: rgba(10, 25, 47, 0.75);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .scene:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            opacity: 0.15;
+            border-radius: 10px;
+            z-index: -1;
+        }
+        /* 不同场景的背景图 */
+        #大树下主场景:before {
+            background-image: url('https://picsum.photos/id/1048/800/600');
+            background-position: center;
+        }
+        #桐木选择:before {
+            background-image: url('https://picsum.photos/id/129/800/600');
+            background-position: center;
+        }
+        #斫琴教学:before {
+            background-image: url('https://picsum.photos/id/110/800/600');
+            background-position: center;
+        }
+        .dialogue {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+        }
+        .choices {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        .choice-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 20px;
+            color: #e0e0e0;
+            font-family: 'SimSun', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .choice-btn:hover {
+            background: rgba(128, 216, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+        .scene-content { display: none; }
+        .scene-content.active { display: block; animation: fadeIn 1s ease; }
+        .clue-card {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #ffd700;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="fog"></div>
+    <!-- 音乐控制组件 -->
+    <div class="music-control" id="musicControl">
+        <span id="musicIcon">▶</span>
+    </div>
+    <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+
+    <div class="container">
+        <header>
+            <h1>遗音天书</h1>
+            <p>墨子妄念 · 太元遗音</p>
+        </header>
+
+        <!-- 主场景：大树下的弹琴师 -->
+        <div id="大树下主场景" class="scene scene-content active">
+            <div class="dialogue">
+                <p>你带着寻得的木材回到紫来洞口，大琴师正坐在古树下抚琴，琴音悠扬穿透林雾。</p>
+                <p>他抬眼望来："看来你已寻到木材了，拿来我瞧瞧。"</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('桐木选择')">提交桐木</button>
+                <button class="choice-btn" onclick="showScene('崖柏选择')">提交崖柏</button>
+                <button class="choice-btn" onclick="showScene('白木香选择')">提交白木香</button>
+            </div>
+        </div>
+
+        <!-- 桐木选择分支 -->
+        <div id="桐木选择" class="scene scene-content">
+            <div class="dialogue">
+                <p>恭喜，你带了正确的木头回来：桐木。</p>
+                <p>大琴师指尖轻抚木面，点头道："桐木材质通透，共鸣极佳，正是制琴的上选。"</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('斫琴教学')">下一步</button>
+            </div>
+        </div>
+
+        <!-- 斫琴教学场景 -->
+        <div id="斫琴教学" class="scene scene-content">
+            <div class="dialogue">
+                <p>大琴师将此木斫成琴，便开始教你弹琴。你得到了桐木琴一张。</p>
+                <p>但是你才弹到第二段，便觉得自己的意识摇摇欲坠……</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('被困琴中')">下一步</button>
+            </div>
+        </div>
+
+        <!-- 其他场景保持不变 -->
+        <div id="被困琴中" class="scene scene-content">
+            <div class="dialogue">
+                <p>你被大琴师困在了琴中。 </p>
+                <p>大琴师：“我会将你的肉身妥善安置于钱塘某处。如你能做到与墨琴灵肉合一，便可轻松找回肉身。”</p>
+                <p>你从来没有被人这样耍弄过，怒火中烧之后，也唯有安静下来，寻觅解决之法。 大琴师会把你的肉身藏在哪里呢？</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('发现线索')">下一步</button>
+            </div>
+        </div>
+
+        <div id="发现线索" class="scene scene-content">
+            <div class="dialogue">
+                <p>你发现你的琴腹有题款【扶韵】二字。或许你应该去吴山脚下的扶韵轩看看。</p>
+                <div class="clue-card">
+                    <p>线索：琴腹题款「扶韵」，可能指向吴山扶韵轩</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+        </div>
+
+        <div id="崖柏选择" class="scene scene-content">
+            <div class="dialogue">
+                <p>大琴师接过崖柏，轻嗅后摇头："此木香气过浓，会扰琴韵。去寻更合适的木材吧。"</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+        </div>
+        <div id="next-point" class="scene scene-content">
+            <div class="dialogue">
+                <p>请前往下一点位</p>
+                <p>联系DM！</p>
+            </div>
+        </div>
+
+        <div id="白木香选择" class="scene scene-content">
+            <div class="dialogue">
+                <p>大琴师指尖叩了叩白木香："质地过软，不耐岁月。再去寻块硬实的木材来。"</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        // 场景切换函数
+        function showScene(sceneId) {
+            document.querySelectorAll('.scene-content').forEach(scene => {
+                scene.classList.remove('active');
+            });
+            document.getElementById(sceneId).classList.add('active');
+        }
+
+        // 音乐控制逻辑
+        const musicControl = document.getElementById('musicControl');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        musicControl.onclick = () => {
+            backgroundMusic.paused ? backgroundMusic.play() : backgroundMusic.pause();
+            musicControl.querySelector('#musicIcon').textContent = backgroundMusic.paused ? '▶' : '⏸';
+        };
+
+        // 云雾效果
+        function createFog() {
+            const fog = document.querySelector('.fog');
+            for (let i = 0; i < 10; i++) {
+                const fogElement = document.createElement('div');
+                fogElement.style.position = 'fixed';
+                fogElement.style.top = Math.random() * 100 + 'vh';
+                fogElement.style.left = Math.random() * 100 + 'vw';
+                fogElement.style.width = Math.random() * 300 + 100 + 'px';
+                fogElement.style.height = Math.random() * 200 + 100 + 'px';
+                fogElement.style.background = 'rgba(255, 255, 255, 0.1)';
+                fogElement.style.borderRadius = '50%';
+                fogElement.style.animation = 'float ' + (Math.random() * 20 + 30) + 's linear infinite';
+                fogElement.style.zIndex = '-1';
+                fog.appendChild(fogElement);
+            }
+        }
+
+        // 添加浮动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(50px, 20px) rotate(5deg); }
+                50% { transform: translate(0, 50px) rotate(0deg); }
+                75% { transform: translate(-50px, 20px) rotate(-5deg); }
+                100% { transform: translate(0, 0) rotate(0deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 页面加载完成后创建云雾
+        window.addEventListener('load', createFog);
+    </script>
+</body>
+</html>

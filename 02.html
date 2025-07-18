@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>遗音天书 - 葛岭·抱朴道观</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/1031/1920/1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
+            font-family: 'SimSun', 'STSong', serif;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+        .fog { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .container {
+            position: relative; z-index: 2; max-width: 1000px; margin: 0 auto; padding: 2rem;
+        }
+        header {
+            text-align: center; margin-bottom: 3rem; padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(128, 216, 255, 0.3);
+        }
+        header h1 {
+            font-size: 2.5rem; color: #f8f8f8;
+            text-shadow: 0 0 10px rgba(128, 216, 255, 0.8), 0 0 20px rgba(128, 216, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        .scene {
+            background: rgba(10, 25, 47, 0.75); border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px; padding: 2.5rem; margin-bottom: 2rem; position: relative;
+            min-height: 400px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .scene:before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-size: cover; opacity: 0.15; border-radius: 10px; z-index: -1;
+        }
+        #fuzhi-scene:before {
+            background-image: url('https://picsum.photos/id/175/800/600'); background-position: center;
+        }
+        #buy-success-scene:before, #earn-money-scene:before {
+            background-image: url('https://picsum.photos/id/133/800/600'); background-position: center;
+        }
+        .dialogue { font-size: 1.1rem; margin-bottom: 2rem; text-shadow: 0 0 5px rgba(0, 0, 0, 0.7); }
+        .exit-btn {
+            background-color: #ffd700; color: #000; border: 1px solid #ccc;
+            padding: 8px 16px; margin-top: 15px; cursor: pointer;
+        }
+        .choices {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem;
+        }
+        .choice-btn {
+            padding: 0.8rem 2rem; background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5); border-radius: 20px;
+            color: #e0e0e0; font-family: 'SimSun', serif; font-size: 1rem;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .choice-btn:hover {
+            background: rgba(128, 216, 255, 0.2); transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+        .scene-content { display: none; }
+        .scene-content.active { display: block; animation: fadeIn 1s ease; }
+        .character { color: #80d8ff; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .footer {
+            text-align: center; margin-top: 3rem; padding-top: 1rem;
+            border-top: 1px solid rgba(128, 216, 255, 0.3);
+            font-size: 0.9rem; color: #b0b0b0;
+        }
+        .coin-slot {
+            width: 150px; height: 50px; margin: 20px auto; border: 2px solid #d4af37;
+            border-radius: 5px; display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.3); cursor: pointer;
+        }
+        .coin-slot:hover { background: rgba(212, 175, 55, 0.2); }
+        
+        /* 提示框样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: rgba(10, 25, 47, 0.9);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .modal-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .close-modal {
+            padding: 0.5rem 1.5rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 20px;
+            color: #e0e0e0;
+            font-family: 'SimSun', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            background: rgba(128, 216, 255, 0.2);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="music-control" id="musicControl">
+        <span id="musicIcon">▶</span>
+    </div>
+    <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+    <div class="fog"></div>
+    <div class="modal-overlay" id="hintModal">
+        <div class="modal-content">
+            <p class="modal-text">铜钱投入成功！获得破界符一张。</p>
+            <div style="text-align: center;">
+                <button class="close-modal" onclick="document.getElementById('hintModal').classList.remove('active');showScene('buy-success');">知晓了</button>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <header>
+            <h1>遗音天书</h1>
+            <p>葛岭·抱朴道观</p>
+        </header>
+
+        <!-- 符纸流通处主场景 -->
+        <div id="fuzhi-scene" class="scene scene-content active">
+            <div class="dialogue">
+                <p>你来到符纸流通处，询问是否有可以破解结界的符纸。</p>
+                <p><span class="character">道士</span>指了指红色的符纸说：“5钱一张，要几张？”</p>
+            </div>
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('buy')">你有足够的钱，你买了一张。（请投币）</button>
+                <button class="choice-btn" onclick="showScene('earn-money')">你没有足够的钱，你决定先去赚钱，再来买符。</button>
+            </div>
+        </div>
+
+        <!-- 购买符纸场景 -->
+        <div id="buy-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>你从怀中取出5文铜钱，准备购买破界符。</p>
+                <p>请将铜钱投入钱槽：</p>
+            </div>
+            <div class="coin-slot" onclick="document.getElementById('hintModal').classList.add('active')">
+                <span style="color:#d4af37;">▦ 投币口 ▦</span>
+            </div>
+        </div>
+
+        <!-- 购买成功场景 -->
+        <div id="buy-success-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>你成功购得破界符，符纸入手温热，隐隐有灵光流动。</p>
+                <p><span class="character">道士</span>：“此符可破三阶以下结界，使用时需注入灵力。”</p>
+                <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+        </div>
+            </div>
+
+        </div>
+
+        <!-- 赚钱场景 -->
+        <div id="earn-money-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>你决定先去赚钱，再回来购买符纸。</p>
+                <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+
+            </div>
+            
+        </div>
+        <!-- 下一点位提示场景 -->
+        <div id="next-point-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>请前往下一点位</p>
+                <p>联系DM！</p>
+            </div>
+            <!-- <div class="choices">
+                <button class="choice-btn" onclick="window.location.href='02.html'">返回上一级</button>
+            </div> -->
+        </div>
+
+        <div class="footer">
+            <p>风云钱塘 · 葛岭篇</p>
+        </div>
+    </div>
+
+    <script>
+        // 场景切换功能
+        function showScene(sceneName) {
+            document.querySelectorAll('.scene-content').forEach(scene => scene.classList.remove('active'));
+            document.getElementById(`${sceneName}-scene`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // 云雾效果
+        function createFog() {
+            const fog = document.querySelector('.fog');
+            for (let i = 0; i < 20; i++) {
+                const fogElement = document.createElement('div');
+                fogElement.style.cssText = `
+                    position: absolute;
+                    width: ${Math.random() * 300 + 100}px;
+                    height: ${Math.random() * 200 + 100}px;
+                    background: rgba(255, 255, 255, ${Math.random() * 0.1 + 0.05});
+                    border-radius: 50%;
+                    top: ${Math.random() * 100}%;
+                    left: ${Math.random() * 100}%;
+                    animation: float ${Math.random() * 30 + 20}s linear infinite;
+                `;
+                fog.appendChild(fogElement);
+            }
+        }
+
+        // 音乐控制
+        const musicControl = document.getElementById('musicControl');
+        const musicIcon = document.getElementById('musicIcon');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        let isPlaying = false;
+
+        musicControl.addEventListener('click', () => {
+            if (isPlaying) {
+                backgroundMusic.pause();
+                musicIcon.textContent = '▶';
+            } else {
+                backgroundMusic.play().then(() => musicIcon.textContent = '⏸')
+                    .catch(err => alert('请点击允许播放音频'));
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // 添加云雾动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) scale(1); }
+                50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 50 - 25}px) scale(${Math.random() * 0.5 + 0.8}); }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+
+         // 初始化
+        // window.addEventListener('load', () => {
+        //     createFog();
+        //     // 为无按钮场景添加离开按钮
+        //     document.querySelectorAll('.scene').forEach(scene => {
+        //         // 检查场景中是否已有按钮
+        //         const hasButtons = scene.querySelector('.choice-btn') !== null;
+        //         // 新增：检查当前场景是否是离开页面（替换为你的离开页面ID）
+        //         const isExitPage = scene.id === 'next-point-scene'; // 假设离开页面ID是'神行符-scene'
+        //         // 新增：检查当前场景是否是离开页面（替换为你的离开页面ID）
+        //         const isExitPage1 = scene.id === 'buy-scene';
+        //         // 只给没有按钮且不是离开页面的场景添加离开按钮
+        //         if (!hasButtons && !isExitPage && !isExitPage1) {
+        //             const exitBtn = document.createElement('button');
+        //             exitBtn.textContent = '离开';
+        //             exitBtn.className = 'exit-btn';
+        //             exitBtn.onclick = () => showScene('next-point');  // 改为跳转至提示场景
+        //             scene.appendChild(exitBtn);
+        //         }
+        //     });
+        // });
+    </script>
+</body>
+</html>

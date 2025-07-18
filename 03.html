@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>遗音天书 - 九溪烟树</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
+            font-family: 'SimSun', 'STSong', serif;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+        .fog { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .container {
+            position: relative; z-index: 2; max-width: 1000px; margin: 0 auto; padding: 2rem;
+        }
+        header {
+            text-align: center; margin-bottom: 3rem; padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(128, 216, 255, 0.3);
+        }
+        header h1 {
+            font-size: 2.5rem; color: #f8f8f8;
+            text-shadow: 0 0 10px rgba(128, 216, 255, 0.8), 0 0 20px rgba(128, 216, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        .scene {
+            background: rgba(10, 25, 47, 0.75); border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px; padding: 2.5rem; margin-bottom: 2rem; position: relative;
+            min-height: 400px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .scene:before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-size: cover; opacity: 0.15; border-radius: 10px; z-index: -1;
+        }
+        #treasure-box-scene:before {
+            background-image: url('https://picsum.photos/id/177/800/600'); background-position: center;
+        }
+        #tongmu-scene:before {
+            background-image: url('https://picsum.photos/id/129/800/600'); background-position: center;
+        }
+        #yabaimu-scene:before {
+            background-image: url('https://picsum.photos/id/110/800/600'); background-position: center;
+        }
+        #chenxiangmu-scene:before {
+            background-image: url('https://picsum.photos/id/184/800/600'); background-position: center;
+        }
+        .dialogue { font-size: 1.1rem; margin-bottom: 2rem; text-shadow: 0 0 5px rgba(0, 0, 0, 0.7); }
+        .exit-btn {
+            background-color: #ffd700; color: #000; border: 1px solid #ccc;
+            padding: 8px 16px; margin-top: 15px; cursor: pointer;
+        }
+        .choices {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 2rem;
+        }
+        .choice-btn {
+            padding: 0.8rem 2rem; background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5); border-radius: 20px;
+            color: #e0e0e0; font-family: 'SimSun', serif; font-size: 1rem;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .choice-btn:hover {
+            background: rgba(128, 216, 255, 0.2); transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+        .scene-content { display: none; }
+        .scene-content.active { display: block; animation: fadeIn 1s ease; }
+        .character { color: #80d8ff; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .footer {
+            text-align: center; margin-top: 3rem; padding-top: 1rem;
+            border-top: 1px solid rgba(128, 216, 255, 0.3);
+            font-size: 0.9rem; color: #b0b0b0;
+        }
+        /* 音乐控制按钮样式 */
+        .music-control {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            background: rgba(10, 25, 47, 0.7); border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 50%; width: 50px; height: 50px; display: flex;
+            align-items: center; justify-content: center; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .music-control:hover {
+            background: rgba(128, 216, 255, 0.2);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+        .music-icon { color: #80d8ff; font-size: 24px; }
+        /* 木头展示框 */
+        .wood-item {
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 8px; padding: 1rem; margin-bottom: 1rem;
+            background: rgba(10, 25, 47, 0.5);
+        }
+        .wood-name { color: #ffd700; font-weight: bold; margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="music-control" id="musicControl">
+        <span id="musicIcon">▶</span>
+    </div>
+    <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+    <div class="fog"></div>
+    <div class="container">
+        <header>
+            <h1>遗音天书</h1>
+            <p>九溪烟树·树宝箱</p>
+        </header>
+
+        <!-- 树宝箱主场景 -->
+        <div id="treasure-box-scene" class="scene scene-content active">
+            <div class="dialogue">
+                <p>你沿着九溪烟树的小径前行，忽见一棵巨大的古树立于溪边，树干上有一个天然形成的树洞，宛如宝箱。</p>
+                <p>树洞内整齐地摆放着三种不同的木头，似乎各有奇妙之处。</p>
+            </div>
+            
+            <div class="wood-item">
+                <div class="wood-name">桐木</div>
+                <p>主干笔直高大，材质疏松，透气性好。</p>
+            </div>
+            
+            <div class="wood-item">
+                <div class="wood-name">崖柏木</div>
+                <p>树干扭曲，造型奇特。材质密度高，含油量大。闻上去有一种清香味。</p>
+            </div>
+            
+            <div class="wood-item">
+                <div class="wood-name">沉香木</div>
+                <p>树干细白，材质疏松，受伤会结露，那露水干透之后的胶块，就被称为沉香，点燃之后有奇异的香味。</p>
+            </div>
+            
+            <div class="choices">
+                <button class="choice-btn" onclick="showScene('tongmu')">选择桐木</button>
+                <button class="choice-btn" onclick="showScene('yabaimu')">选择崖柏木</button>
+                <button class="choice-btn" onclick="showScene('chenxiangmu')">选择沉香木</button>
+            </div>
+        </div>
+
+        <!-- 桐木场景 -->
+        <div id="tongmu-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>你选择了桐木，其笔直的纹理和疏松的材质让你想到它非常适合制作乐器或通风的器具。</p>
+                <p>你将桐木收进背包，或许在后续的冒险中能派上用场。</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+        </div>
+
+        <!-- 崖柏木场景 -->
+        <div id="yabaimu-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>你选择了崖柏木，其独特的扭曲造型和清香味让你感到神清气爽。</p>
+                <p>材质紧密且含油量高，或许可以用来制作香料或耐久的木制品。</p>
+                <p>你小心地将崖柏木收进背包。</p>
+                
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+        </div>
+
+        <!-- 沉香木场景 -->
+        <div id="chenxiangmu-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>你选择了沉香木，其细白的木质中似乎蕴含着神秘的力量。</p>
+                <p>你想起古籍中记载，沉香木受伤后形成的沉香具有安神定魂的功效，是极为珍贵的药材和香料。</p>
+                <p>你轻轻抚摸着沉香木，感觉它似乎在微微发热。</p>
+                
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+        </div>
+
+        </div>
+
+        <!-- 下一点位提示场景 -->
+        <div id="next-point-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>请前往下一点位</p>
+                <p>联系DM！</p>
+            </div>
+            <!-- <div class="choices">
+                <button class="choice-btn" onclick="window.location.href='02.html'">返回上一级</button>
+            </div> -->
+        </div>
+
+        <div class="footer">
+            <p>风云钱塘 · 九溪篇</p>
+        </div>
+    </div>
+
+    <script>
+        // 场景切换功能
+        function showScene(sceneName) {
+            document.querySelectorAll('.scene-content').forEach(scene => scene.classList.remove('active'));
+            document.getElementById(`${sceneName}-scene`).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // 云雾效果
+        function createFog() {
+            const fog = document.querySelector('.fog');
+            for (let i = 0; i < 20; i++) {
+                const fogElement = document.createElement('div');
+                fogElement.style.cssText = `
+                    position: absolute;
+                    width: ${Math.random() * 300 + 100}px;
+                    height: ${Math.random() * 200 + 100}px;
+                    background: rgba(255, 255, 255, ${Math.random() * 0.1 + 0.05});
+                    border-radius: 50%;
+                    top: ${Math.random() * 100}%;
+                    left: ${Math.random() * 100}%;
+                    animation: float ${Math.random() * 30 + 20}s linear infinite;
+                `;
+                fog.appendChild(fogElement);
+            }
+        }
+
+        // 音乐控制
+        const musicControl = document.getElementById('musicControl');
+        const musicIcon = document.getElementById('musicIcon');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        let isPlaying = false;
+
+        musicControl.addEventListener('click', () => {
+            if (isPlaying) {
+                backgroundMusic.pause();
+                musicIcon.textContent = '▶';
+            } else {
+                backgroundMusic.play().then(() => musicIcon.textContent = '⏸')
+                    .catch(err => alert('请点击允许播放音频'));
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // 添加云雾动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) scale(1); }
+                50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 50 - 25}px) scale(${Math.random() * 0.5 + 0.8}); }
+                100% { transform: translate(0, 0) scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 初始化
+        // window.addEventListener('load', () => {
+        //     createFog();
+        //     // 为无按钮场景添加离开按钮
+        //     document.querySelectorAll('.scene').forEach(scene => {
+        //         // 检查场景中是否已有按钮
+        //         const hasButtons = scene.querySelector('.choice-btn') !== null;
+        //         // 新增：检查当前场景是否是离开页面（替换为你的离开页面ID）
+        //         const isExitPage = scene.id === 'next-point-scene'; // 假设离开页面ID是'神行符-scene'
+                
+        //         // 只给没有按钮且不是离开页面的场景添加离开按钮
+        //         if (!hasButtons && !isExitPage) {
+        //             const exitBtn = document.createElement('button');
+        //             exitBtn.textContent = '离开';
+        //             exitBtn.className = 'exit-btn';
+        //             exitBtn.onclick = () => showScene('next-point');  // 改为跳转至提示场景
+        //             scene.appendChild(exitBtn);
+        //         }
+        //     });
+        // });
+    </script>
+</body>
+</html>
