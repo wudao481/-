@@ -112,6 +112,27 @@
             transform: translateY(-3px);
             box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
         }
+        
+        /* 统一完成任务按钮样式 */
+        .exit-btn {
+            background-color: #ffd700;
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 8px 16px;
+            margin-top: 15px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-family: 'SimSun', serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .exit-btn:hover {
+            background: rgba(255, 215, 0, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+        
         .scene-content { display: none; }
         .scene-content.active { display: block; animation: fadeIn 1s ease; }
         .clue-card {
@@ -196,7 +217,7 @@
                     <p>线索：琴腹题款「扶韵」，可能指向吴山扶韵轩</p>
                 </div>
             </div>
-            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+            <div class="choices"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
         </div>
         </div>
 
@@ -204,7 +225,7 @@
             <div class="dialogue">
                 <p>大琴师接过崖柏，轻嗅后摇头："此木香气过浓，会扰琴韵。去寻更合适的木材吧。"</p>
             </div>
-            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+            <div class="choices"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
         </div>
         </div>
         <div id="next-point" class="scene scene-content">
@@ -218,7 +239,7 @@
             <div class="dialogue">
                 <p>大琴师指尖叩了叩白木香："质地过软，不耐岁月。再去寻块硬实的木材来。"</p>
             </div>
-            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
+            <div class="choices"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
         </div>
         </div>
     </div>
