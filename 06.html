@@ -133,6 +133,28 @@
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
         }
         
+        /* 密码页样式 */
+        .password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 25, 47, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .password-content {
+            text-align: center;
+            padding: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            border-radius: 10px;
+            background: rgba(10, 25, 47, 0.8);
+        }
+        
         .scene-content { display: none; }
         .scene-content.active { display: block; animation: fadeIn 1s ease; }
         .clue-card {
@@ -150,6 +172,16 @@
     </style>
 </head>
 <body>
+    <!-- 新增密码验证页面 -->
+    <div id="password-screen" class="password-screen">
+        <div class="password-content">
+            <h2 style="color: #ffd700; margin-bottom: 20px;">请输入木材密码</h2>
+            <input type="text" id="password-input" maxlength="4" placeholder="四位数字密码" style="padding: 0.8rem; margin: 1rem 0; width: 200px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.5); border-radius: 5px; color: #ffd700; font-size: 1.2rem; text-align: center;">
+            <br>
+            <button class="choice-btn" onclick="checkPassword()">提交</button>
+        </div>
+    </div>
+    
     <div class="fog"></div>
     <!-- 音乐控制组件 -->
     <div class="music-control" id="musicControl">
@@ -170,9 +202,9 @@
                 <p>他抬眼望来："看来你已寻到木材了，拿来我瞧瞧。"</p>
             </div>
             <div class="choices">
-                <button class="choice-btn" onclick="showScene('桐木选择')">提交桐木</button>
-                <button class="choice-btn" onclick="showScene('崖柏选择')">提交崖柏</button>
-                <button class="choice-btn" onclick="showScene('白木香选择')">提交白木香</button>
+                <button class="choice-btn wood-btn" data-wood="tongmu" onclick="showScene('桐木选择')">提交桐木</button>
+                <button class="choice-btn wood-btn" data-wood="yabai" onclick="showScene('崖柏选择')">提交崖柏</button>
+                <button class="choice-btn wood-btn" data-wood="baimuxiang" onclick="showScene('白木香选择')">提交白木香</button>
             </div>
         </div>
 
@@ -213,6 +245,7 @@
         <div id="发现线索" class="scene scene-content">
             <div class="dialogue">
                 <p>你发现你的琴腹有题款【扶韵】二字。或许你应该去吴山脚下的扶韵轩看看。</p>
+                <p>通关密码：0201</p>
                 <div class="clue-card">
                     <p>线索：琴腹题款「扶韵」，可能指向吴山扶韵轩</p>
                 </div>
@@ -245,6 +278,36 @@
     </div>
 
     <script>
+        // 新增密码验证功能
+        function checkPassword() {
+            const password = document.getElementById('password-input').value;
+            let woodType = '';
+            
+            // 根据密码判断木材类型
+            switch(password) {
+                case '0101': // 桐木
+                    woodType = 'tongmu';
+                    break;
+                case '0110': // 崖柏木
+                    woodType = 'yabai';
+                    break;
+                case '0111': // 沉香木(白木香)
+                    woodType = 'baimuxiang';
+                    break;
+                default:
+                    alert('密码错误，请重新输入');
+                    return;
+            }
+            
+            // 隐藏密码页
+            document.getElementById('password-screen').style.display = 'none';
+            
+            // 只显示对应木材的按钮
+            document.querySelectorAll('.wood-btn').forEach(btn => {
+                btn.style.display = btn.dataset.wood === woodType ? 'block' : 'none';
+            });
+        }
+        
         // 场景切换函数
         function showScene(sceneId) {
             document.querySelectorAll('.scene-content').forEach(scene => {
@@ -252,7 +315,16 @@
             });
             document.getElementById(sceneId).classList.add('active');
         }
-
+        
+        // 修改页面加载事件
+        window.addEventListener('load', function() {
+            // 隐藏所有木材选择按钮
+            document.querySelectorAll('.wood-btn').forEach(btn => {
+                btn.style.display = 'none';
+            });
+            createFog();
+        });
+        
         // 音乐控制逻辑
         const musicControl = document.getElementById('musicControl');
         const backgroundMusic = document.getElementById('backgroundMusic');

@@ -5,6 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>遗音天书 - 紫来洞内·赏画琴师</title>
     <style>
+        /* 密码验证样式 */
+        .password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(10, 25, 47, 0.95), rgba(10, 25, 47, 0.85));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .password-container {
+            background: rgba(10, 25, 47, 0.75);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px;
+            padding: 2.5rem;
+            position: relative;
+            min-width: 400px;
+            text-align: center;
+        }
+        .password-container:before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('https://picsum.photos/id/190/800/600');
+            background-position: center;
+            background-size: cover;
+            opacity: 0.15;
+            border-radius: 10px;
+            z-index: -1;
+        }
+        .password-container h2 {
+            font-size: 1.8rem;
+            color: #f8f8f8;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(128, 216, 255, 0.8), 0 0 20px rgba(128, 216, 255, 0.5);
+        }
+        #passwordInput {
+            width: 200px;
+            height: 50px;
+            font-size: 2rem;
+            text-align: center;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 20px;
+            color: #e0e0e0;
+            margin-bottom: 2rem;
+            letter-spacing: 10px;
+            padding-left: 15px;
+            font-family: 'SimSun', serif;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -144,6 +198,16 @@
         <span id="musicIcon">▶</span>
     </div>
     <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+
+    <div class="password-screen" id="passwordScreen">
+        <div class="password-container">
+            <h2>请输入密码</h2>
+            <input type="text" id="passwordInput" maxlength="4" placeholder="----" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            <div class="choices">
+                <button class="choice-btn" onclick="checkPassword()">提交</button>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <header>
@@ -295,6 +359,7 @@
     </div>
 
     <script>
+        
         // 场景切换函数
         function showScene(sceneId) {
             document.querySelectorAll('.scene-content').forEach(scene => {
@@ -344,6 +409,35 @@
 
         // 页面加载完成后创建云雾
         window.addEventListener('load', createFog);
+        // 密码验证函数
+        function checkPassword() {
+            const password = document.getElementById('passwordInput').value;
+            if (password === '0000') {
+                document.getElementById('passwordScreen').style.display = 'none';
+                showScene('紫来洞内主场景');
+            } else {
+                alert('密码错误，请前往扶韵轩获取密码');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        // ... existing code ...
+
+        // 修改页面加载逻辑
+        window.addEventListener('load', function() {
+            // 显示密码页
+            document.getElementById('passwordScreen').style.display = 'flex';
+            
+            // 隐藏所有场景
+            document.querySelectorAll('.scene-content').forEach(scene => {
+                scene.classList.remove('active');
+            });
+            
+            // 保留原有云雾动画
+            createFog();
+        });
+
+
     </script>
 </body>
 </html>

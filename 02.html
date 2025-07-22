@@ -131,9 +131,40 @@
             background: rgba(128, 216, 255, 0.2);
             box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
         }
+        
+        /* 密码页样式 */
+        .password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 25, 47, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .password-content {
+            text-align: center;
+            padding: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            border-radius: 10px;
+            background: rgba(10, 25, 47, 0.8);
+        }
     </style>
 </head>
 <body>
+    <!-- 新增密码验证页面 -->
+    <div id="password-screen" class="password-screen">
+        <div class="password-content">
+            <h2 style="color: #ffd700; margin-bottom: 20px;">请输入密码</h2>
+            <input type="text" id="password-input" maxlength="4" placeholder="四位数字密码" style="padding: 0.8rem; margin: 1rem 0; width: 200px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.5); border-radius: 5px; color: #ffd700; font-size: 1.2rem; text-align: center;">
+            <br>
+            <button class="choice-btn" onclick="checkPassword()">提交</button>
+        </div>
+    </div>
     <div class="music-control" id="musicControl">
         <span id="musicIcon">▶</span>
     </div>
@@ -181,6 +212,7 @@
             <div class="dialogue">
                 <p>你成功购得破界符，符纸入手温热，隐隐有灵光流动。</p>
                 <p><span class="character">道士</span>：“此符可破三阶以下结界，使用时需注入灵力。”</p>
+                <p>通关密码：0004</p>
                 <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
         </div>
         </div>
@@ -215,6 +247,40 @@
     </div>
 
     <script>
+        // 新增密码验证功能
+        function checkPassword() {
+            const password = document.getElementById('password-input').value;
+            if (password === '0002') {
+                document.getElementById('password-screen').style.display = 'none';
+                document.getElementById('fuzhi-scene').classList.add('active');
+            } else {
+                alert('请前往紫来洞获取密码');
+            }
+        }
+        
+        // 页面加载时隐藏所有场景
+        // window.addEventListener('load', function() {
+        //     document.querySelectorAll('.scene-content').forEach(scene => scene.classList.remove('active'));
+        //     createFog();
+        //     // 为无按钮场景添加离开按钮
+        //     document.querySelectorAll('.scene').forEach(scene => {
+        //         // 检查场景中是否已有按钮
+        //         const hasButtons = scene.querySelector('.choice-btn') !== null;
+        //         // 新增：检查当前场景是否是离开页面（替换为你的离开页面ID）
+        //         const isExitPage = scene.id === 'next-point-scene'; // 假设离开页面ID是'神行符-scene'
+        //         // 新增：检查当前场景是否是离开页面（替换为你的离开页面ID）
+        //         const isExitPage1 = scene.id === 'buy-scene';
+        //         // 只给没有按钮且不是离开页面的场景添加离开按钮
+        //         if (!hasButtons && !isExitPage && !isExitPage1) {
+        //             const exitBtn = document.createElement('button');
+        //             exitBtn.textContent = '离开';
+        //             exitBtn.className = 'exit-btn';
+        //             exitBtn.onclick = () => showScene('next-point');  // 改为跳转至提示场景
+        //             scene.appendChild(exitBtn);
+        //         }
+        //     });
+        // });
+        
         // 场景切换功能
         function showScene(sceneName) {
             document.querySelectorAll('.scene-content').forEach(scene => scene.classList.remove('active'));

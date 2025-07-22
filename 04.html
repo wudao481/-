@@ -237,9 +237,40 @@
             font-style: italic;
             color: #b0d8ff;
         }
+        
+        /* 密码页样式 */
+        .password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 25, 47, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .password-content {
+            text-align: center;
+            padding: 2rem;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            border-radius: 10px;
+            background: rgba(10, 25, 47, 0.8);
+        }
     </style>
 </head>
 <body>
+    <!-- 新增密码验证页面 -->
+    <div id="password-screen" class="password-screen">
+        <div class="password-content">
+            <h2 style="color: #ffd700; margin-bottom: 20px;">请输入密码</h2>
+            <input type="text" id="password-input" maxlength="4" placeholder="四位数字密码" style="padding: 0.8rem; margin: 1rem 0; width: 200px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 215, 0, 0.5); border-radius: 5px; color: #ffd700; font-size: 1.2rem; text-align: center;">
+            <br>
+            <button class="choice-btn" onclick="checkPassword()">提交</button>
+        </div>
+    </div>
     <!-- 音乐控制按钮 -->
     <div class="music-control" id="musicControl">
         <span id="musicIcon">▶</span>
@@ -309,6 +340,7 @@
            
             <div class="dialogue">
                 <p>行完拜师礼后，男子说："先上山找段合适的木头回来做琴。"</p>
+                <p>通关密码：0003</p>
                 <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button></div>
         </div>
                 <!-- 此处可扩展寻木剧情 -->
@@ -606,6 +638,24 @@
             });
         }
 
+        // 新增密码验证功能
+        function checkPassword() {
+            const password = document.getElementById('password-input').value;
+            if (password === '0004') {
+                document.getElementById('password-screen').style.display = 'none';
+                document.getElementById('紫来洞-行大礼-scene').classList.add('active');
+            } else {
+                alert('请前往葛岭获取密码，仅限寻求破界之法的人');
+            }
+        }
+        
+        // 页面加载时隐藏所有场景
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.scene-content').forEach(scene => scene.classList.remove('active'));
+            createFog();
+            // ... existing code ...
+        });
+        
         // 音乐控制功能 - 适配微信浏览器
         const musicControl = document.getElementById('musicControl');
         const musicIcon = document.getElementById('musicIcon');
