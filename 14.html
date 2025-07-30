@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遗音天书 - 剧情列表</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
+            font-family: 'SimSun', 'STSong', serif;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+        .fog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(128, 216, 255, 0.3);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            color: #f8f8f8;
+            text-shadow: 0 0 10px rgba(128, 216, 255, 0.8), 0 0 20px rgba(128, 216, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        .scene {
+            background: rgba(10, 25, 47, 0.75);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .scene:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://picsum.photos/id/190/800/600');
+            background-position: center;
+            background-size: cover;
+            opacity: 0.15;
+            border-radius: 10px;
+            z-index: -1;
+        }
+        .dialogue {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+        }
+        .story-list {
+            list-style-type: none;
+            margin: 1.5rem 0;
+        }
+        .story-item {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        .story-item:hover {
+            background: rgba(128, 216, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.3);
+        }
+        .story-link {
+            color: #e0e0e0;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .story-icon {
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+        .choice-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 20px;
+            color: #e0e0e0;
+            font-family: 'SimSun', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+        .choice-btn:hover {
+            background: rgba(128, 216, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="fog"></div>
+    <!-- 音乐控制组件 -->
+    <div class="music-control" id="musicControl">
+        <span id="musicIcon">▶</span>
+    </div>
+    <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+
+    <div class="container">
+        <header>
+            <h1>遗音天书</h1>
+            <p>剧情列表</p>
+        </header>
+
+        <!-- 主场景 -->
+        <div id="main-scene" class="scene scene-content active">
+            <div class="dialogue">
+                <p>以下是《遗音天书》的剧情列表，请选择查看：</p>
+            </div>
+            <ul class="story-list" id="storyList">
+                <!-- 剧情列表将通过JavaScript动态生成 -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 音乐控制逻辑
+        const musicControl = document.getElementById('musicControl');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        musicControl.onclick = () => {
+            backgroundMusic.paused ? backgroundMusic.play() : backgroundMusic.pause();
+            musicControl.querySelector('#musicIcon').textContent = backgroundMusic.paused ? '▶' : '⏸';
+        };
+
+        // 云雾效果
+        function createFog() {
+            const fog = document.querySelector('.fog');
+            for (let i = 0; i < 10; i++) {
+                const fogElement = document.createElement('div');
+                fogElement.style.position = 'fixed';
+                fogElement.style.top = Math.random() * 100 + 'vh';
+                fogElement.style.left = Math.random() * 100 + 'vw';
+                fogElement.style.width = Math.random() * 300 + 100 + 'px';
+                fogElement.style.height = Math.random() * 200 + 100 + 'px';
+                fogElement.style.background = 'rgba(255, 255, 255, 0.1)';
+                fogElement.style.borderRadius = '50%';
+                fogElement.style.animation = 'float ' + (Math.random() * 20 + 30) + 's linear infinite';
+                fogElement.style.zIndex = '-1';
+                fog.appendChild(fogElement);
+            }
+        }
+
+        // 添加浮动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(50px, 20px) rotate(5deg); }
+                50% { transform: translate(0, 50px) rotate(0deg); }
+                75% { transform: translate(-50px, 20px) rotate(-5deg); }
+                100% { transform: translate(0, 0) rotate(0deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 生成剧情列表
+        function generateStoryList() {
+            const storyList = document.getElementById('storyList');
+            
+            // 剧情文件列表（根据目录结构）
+            const stories = [
+                { name: 'A1夏侯茶', file: '剧本/A1夏侯茶.docx' },
+                { name: 'A2嵇淑夜', file: '剧本/A2嵇淑夜.docx' },
+                { name: 'A3白渊', file: '剧本/A3白渊.docx' },
+                { name: 'A4陈霁', file: '剧本/A4陈霁.docx' },
+                { name: 'A5麒麟君', file: '剧本/A5麒麟君.docx' },
+                { name: 'A6青阳', file: '剧本/A6青阳.docx' },
+                { name: 'A7嵇伏', file: '剧本/A7嵇伏.docx' }
+            ];
+            
+            // 动态创建列表项
+            stories.forEach(story => {
+                const li = document.createElement('li');
+                li.className = 'story-item';
+                
+                const a = document.createElement('a');
+                a.href = story.file;
+                a.className = 'story-link';
+                a.target = '_blank';  // 在新标签页打开
+                
+                const icon = document.createElement('span');
+                icon.className = 'story-icon';
+                icon.textContent = '📜';
+                
+                const text = document.createTextNode(story.name);
+                
+                a.appendChild(icon);
+                a.appendChild(text);
+                li.appendChild(a);
+                storyList.appendChild(li);
+            });
+        }
+
+        // 页面加载完成后创建云雾并生成剧情列表
+        window.addEventListener('load', () => {
+            createFog();
+            generateStoryList();
+        });
+    </script>
+</body>
+</html>

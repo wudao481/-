@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遗音天书 - 获得帛书残片</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
+            font-family: 'SimSun', 'STSong', serif;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+        .fog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(128, 216, 255, 0.3);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            color: #f8f8f8;
+            text-shadow: 0 0 10px rgba(128, 216, 255, 0.8), 0 0 20px rgba(128, 216, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        .scene {
+            background: rgba(10, 25, 47, 0.75);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .scene:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://picsum.photos/id/190/800/600');
+            background-position: center;
+            background-size: cover;
+            opacity: 0.15;
+            border-radius: 10px;
+            z-index: -1;
+        }
+        .dialogue {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+            text-align: center;
+        }
+        .artifact {
+            width: 200px;
+            height: 300px;
+            background: linear-gradient(rgba(255, 215, 0, 0.2), rgba(165, 42, 42, 0.3));
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem auto;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer; /* 添加鼠标指针样式，表示可点击 */
+        }
+        .artifact:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        .artifact-content {
+            font-size: 1.5rem;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+        }
+        .choice-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 20px;
+            color: #e0e0e0;
+            font-family: 'SimSun', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+        .choice-btn:hover {
+            background: rgba(128, 216, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+        .exit-btn {
+            background-color: #ffd700;
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 8px 16px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        .scene-content { display: none; }
+        .scene-content.active { display: block; animation: fadeIn 1s ease; }
+        .clue-card {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #ffd700;
+            text-align: center;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: rgba(10, 25, 47, 0.95);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ffd700;
+        }
+        .modal-title {
+            font-size: 1.5rem;
+            color: #ffd700;
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            color: #ffd700;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .modal-body {
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+    
+        .artifact:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        .artifact-content {
+            font-size: 1.5rem;
+            color: #ffd700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+        }
+        .choice-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 20px;
+            color: #e0e0e0;
+            font-family: 'SimSun', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+        .choice-btn:hover {
+            background: rgba(128, 216, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+        .exit-btn {
+            background-color: #ffd700;
+            color: #000;
+            border: 1px solid #ccc;
+            padding: 8px 16px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+        .scene-content { display: none; }
+        .scene-content.active { display: block; animation: fadeIn 1s ease; }
+        .clue-card {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            color: #ffd700;
+            text-align: center;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="fog"></div>
+    <!-- 音乐控制组件 -->
+    <div class="music-control" id="musicControl">
+        <span id="musicIcon">▶</span>
+    </div>
+    <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+
+    <div class="container">
+        <header>
+            <h1>遗音天书</h1>
+            <p>获得帛书残片</p>
+        </header>
+
+        <!-- 主场景 -->
+        <div id="main-scene" class="scene scene-content active">
+            <div class="dialogue">
+                <p>你在探索过程中，发现了一个古老的帛书残片。</p>
+                <p>残片上的文字虽然斑驳，但依然可以看出是某种琴谱的一部分。</p>
+            </div>
+            <div class="artifact" id="artifact">
+                <div class="artifact-content">
+                    帛书残片<br>壹
+                </div>
+            </div>
+            <div class="clue-card">
+                <p>获得 1 枚帛书残片</p>
+            </div>
+            <div style="text-align: center;">
+                <button class="exit-btn" onclick="alert('任务完成，请联系DM提交当前页面截图')">完成任务</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 序内容弹窗 -->
+    <div id="scrollModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">遗音天书·序</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>上古之时，天地混沌，音律未分。伏羲氏仰观天象，俯察地理，创琴瑟以通神明之德，合天地之和。</p>
+                <p>其后，黄帝命伶伦取竹于昆仑之阴，制十二律，以应十二月。从此，八音克谐，神人以和。</p>
+                <p>然岁月流转，战火频仍，许多古乐失传。至春秋时期，孔子删定《诗经》，整理雅乐，然秦火之后，又散佚大半。</p>
+                <p>汉武帝时，李延年为协律都尉，搜集民间歌谣，作《郊祀歌》十九章。其后，蔡邕作《琴操》，嵇康作《琴赋》，均为琴学经典。</p>
+                <p>今所传者，唯《广陵散》《梅花三弄》等数曲而已。其余皆如广陵散绝，令人叹惋。</p>
+                <p>余自幼好古，致力于搜集整理散佚的古乐谱。偶得一帛书残片，上有古乐谱数行，虽残缺不全，然笔法古朴，音调高妙。</p>
+                <p>遂发愿重构此曲，以传后世。历经数载，终于完成。因残片得于紫来洞，故命名为《紫来洞琴谱》。</p>
+                <p>今将此谱公之于世，望有缘者得之，善加研习，使古乐重放异彩。</p>
+                <p>—— 太史令 司马迁 谨识</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 音乐控制逻辑
+        const musicControl = document.getElementById('musicControl');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        musicControl.onclick = () => {
+            backgroundMusic.paused ? backgroundMusic.play() : backgroundMusic.pause();
+            musicControl.querySelector('#musicIcon').textContent = backgroundMusic.paused ? '▶' : '⏸';
+        };
+
+        // 帛书点击事件和弹窗控制
+        const artifact = document.getElementById('artifact');
+        const modal = document.getElementById('scrollModal');
+        const closeModal = document.getElementById('closeModal');
+
+        // 点击帛书显示弹窗
+        artifact.addEventListener('click', () => {
+            modal.style.display = 'flex';
+            // 添加显示动画
+            setTimeout(() => {
+                modal.querySelector('.modal-content').style.opacity = '1';
+            }, 10);
+        });
+
+        // 点击关闭按钮隐藏弹窗
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // 点击弹窗外部区域关闭弹窗
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // 云雾效果
+        function createFog() {
+            const fog = document.querySelector('.fog');
+            for (let i = 0; i < 10; i++) {
+                const fogElement = document.createElement('div');
+                fogElement.style.position = 'fixed';
+                fogElement.style.top = Math.random() * 100 + 'vh';
+                fogElement.style.left = Math.random() * 100 + 'vw';
+                fogElement.style.width = Math.random() * 300 + 100 + 'px';
+                fogElement.style.height = Math.random() * 200 + 100 + 'px';
+                fogElement.style.background = 'rgba(255, 255, 255, 0.1)';
+                fogElement.style.borderRadius = '50%';
+                fogElement.style.animation = 'float ' + (Math.random() * 20 + 30) + 's linear infinite';
+                fogElement.style.zIndex = '-1';
+                fog.appendChild(fogElement);
+            }
+        }
+
+        // 添加浮动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(50px, 20px) rotate(5deg); }
+                50% { transform: translate(0, 50px) rotate(0deg); }
+                75% { transform: translate(-50px, 20px) rotate(-5deg); }
+                100% { transform: translate(0, 0) rotate(0deg); }
+            }
+            .modal-content {
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 页面加载完成后创建云雾
+        window.addEventListener('load', createFog);
+    </script>
+</body>
+</html>
