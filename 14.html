@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>遗音天书 - 剧情列表</title>
+    <!-- 添加预加载关键资源 -->
+    <link rel="preload" href="叩桐 - 华胥引.mp3" as="audio" type="audio/mpeg">
     <style>
         * {
             margin: 0;
@@ -12,12 +14,54 @@
         }
         body {
             min-height: 100vh;
-            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080') no-repeat center center fixed;
+            /* 使用CSS变量存储颜色值 */
+            --bg-color-1: rgba(10, 25, 47, 0.85);
+            --bg-color-2: rgba(10, 25, 47, 0.7);
+            background: linear-gradient(var(--bg-color-1), var(--bg-color-2));
+            /* 暂时移除背景图，等页面加载后再添加 */
             background-size: cover;
             color: #e0e0e0;
             font-family: 'SimSun', 'STSong', serif;
             overflow-x: hidden;
             line-height: 1.8;
+        }
+        /* 添加加载指示器样式 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 25, 47, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-content {
+            text-align: center;
+        }
+        .loader-text {
+            font-size: 1.5rem;
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+        .loader-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffd700;
+            animation: spin 1s ease-in-out infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         .fog {
             position: fixed;
@@ -122,12 +166,21 @@
     </style>
 </head>
 <body>
+    <!-- 添加加载指示器 -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-spinner"></div>
+            <div class="loader-text">加载中...</div>
+        </div>
+    </div>
+
     <div class="fog"></div>
     <!-- 音乐控制组件 -->
     <div class="music-control" id="musicControl">
         <span id="musicIcon">▶</span>
     </div>
-    <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+    <!-- 移除自动加载音乐，改为用户交互后加载 -->
+    <audio id="backgroundMusic" loop></audio>
 
     <div class="container">
         <header>
@@ -147,18 +200,45 @@
     </div>
 
     <script>
-        // 音乐控制逻辑
+        // 页面加载完成后隐藏加载指示器
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loader').classList.add('hidden');
+                // 延迟添加背景图，提高初始加载速度
+                document.body.style.backgroundImage = "linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080')";
+                document.body.style.backgroundAttachment = "fixed";
+                document.body.style.backgroundPosition = "center";
+                document.body.style.backgroundRepeat = "no-repeat";
+                document.body.style.backgroundSize = "cover";
+            }, 500);
+        });
+
+        // 音乐控制逻辑 - 延迟加载音乐
         const musicControl = document.getElementById('musicControl');
         const backgroundMusic = document.getElementById('backgroundMusic');
+        let musicLoaded = false;
+
         musicControl.onclick = () => {
-            backgroundMusic.paused ? backgroundMusic.play() : backgroundMusic.pause();
-            musicControl.querySelector('#musicIcon').textContent = backgroundMusic.paused ? '▶' : '⏸';
+            if (!musicLoaded) {
+                // 首次点击时加载音乐
+                backgroundMusic.src = '叩桐 - 华胥引.mp3';
+                musicLoaded = true;
+                // 加载完成后播放
+                backgroundMusic.oncanplaythrough = function() {
+                    backgroundMusic.play();
+                    musicControl.querySelector('#musicIcon').textContent = '⏸';
+                };
+            } else {
+                backgroundMusic.paused ? backgroundMusic.play() : backgroundMusic.pause();
+                musicControl.querySelector('#musicIcon').textContent = backgroundMusic.paused ? '▶' : '⏸';
+            }
         };
 
-        // 云雾效果
+        // 优化云雾效果 - 减少元素数量并使用requestAnimationFrame
         function createFog() {
             const fog = document.querySelector('.fog');
-            for (let i = 0; i < 10; i++) {
+            // 减少云雾元素数量从10个到5个
+            for (let i = 0; i < 5; i++) {
                 const fogElement = document.createElement('div');
                 fogElement.style.position = 'fixed';
                 fogElement.style.top = Math.random() * 100 + 'vh';
@@ -167,13 +247,14 @@
                 fogElement.style.height = Math.random() * 200 + 100 + 'px';
                 fogElement.style.background = 'rgba(255, 255, 255, 0.1)';
                 fogElement.style.borderRadius = '50%';
-                fogElement.style.animation = 'float ' + (Math.random() * 20 + 30) + 's linear infinite';
+                // 使用较短的动画时间
+                fogElement.style.animation = 'float ' + (Math.random() * 10 + 15) + 's linear infinite';
                 fogElement.style.zIndex = '-1';
                 fog.appendChild(fogElement);
             }
         }
 
-        // 添加浮动动画
+        // 浮动动画保持不变
         const style = document.createElement('style');
         style.textContent = `
             @keyframes float {
@@ -186,11 +267,12 @@
         `;
         document.head.appendChild(style);
 
-        // 生成剧情列表
+        // 生成剧情列表 - 使用文档片段减少重排
         function generateStoryList() {
             const storyList = document.getElementById('storyList');
-            
-            // 剧情文件列表（根据目录结构）
+            const fragment = document.createDocumentFragment();
+
+            // 剧情文件列表
             const stories = [
                 { name: 'A1夏侯茶', file: '剧本/A1夏侯茶.docx' },
                 { name: 'A2嵇淑夜', file: '剧本/A2嵇淑夜.docx' },
@@ -200,34 +282,40 @@
                 { name: 'A6青阳', file: '剧本/A6青阳.docx' },
                 { name: 'A7嵇伏', file: '剧本/A7嵇伏.docx' }
             ];
-            
+
             // 动态创建列表项
             stories.forEach(story => {
                 const li = document.createElement('li');
                 li.className = 'story-item';
-                
+
                 const a = document.createElement('a');
                 a.href = story.file;
                 a.className = 'story-link';
-                a.target = '_blank';  // 在新标签页打开
-                
+                a.target = '_blank';
+
                 const icon = document.createElement('span');
                 icon.className = 'story-icon';
                 icon.textContent = '📜';
-                
+
                 const text = document.createTextNode(story.name);
-                
+
                 a.appendChild(icon);
                 a.appendChild(text);
                 li.appendChild(a);
-                storyList.appendChild(li);
+                fragment.appendChild(li);
             });
+
+            // 一次性添加到DOM
+            storyList.appendChild(fragment);
         }
 
         // 页面加载完成后创建云雾并生成剧情列表
         window.addEventListener('load', () => {
-            createFog();
-            generateStoryList();
+            // 使用requestAnimationFrame优化动画性能
+            requestAnimationFrame(() => {
+                createFog();
+                generateStoryList();
+            });
         });
     </script>
 </body>
