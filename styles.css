@@ -1,0 +1,38 @@
+/* 非关键CSS样式 */
+.scene:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('https://picsum.photos/id/190/800/600');
+    background-position: center;
+    background-size: cover;
+    opacity: 0.15;
+    border-radius: 10px;
+    z-index: -1;
+}
+.fog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+@-webkit-keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(50px, 20px) rotate(5deg); }
+    50% { transform: translate(0, 50px) rotate(0deg); }
+    75% { transform: translate(-50px, 20px) rotate(-5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+@keyframes float {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(50px, 20px) rotate(5deg); }
+    50% { transform: translate(0, 50px) rotate(0deg); }
+    75% { transform: translate(-50px, 20px) rotate(-5deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}

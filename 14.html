@@ -2,66 +2,111 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>遗音天书 - 剧情列表</title>
-    <!-- 添加预加载关键资源 -->
-    <link rel="preload" href="叩桐 - 华胥引.mp3" as="audio" type="audio/mpeg">
+    <!-- 关键CSS内联 -->
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 0; padding: 0; box-sizing: border-box;
         }
         body {
             min-height: 100vh;
-            /* 使用CSS变量存储颜色值 */
-            --bg-color-1: rgba(10, 25, 47, 0.85);
-            --bg-color-2: rgba(10, 25, 47, 0.7);
-            background: linear-gradient(var(--bg-color-1), var(--bg-color-2));
-            /* 暂时移除背景图，等页面加载后再添加 */
-            background-size: cover;
+            background: #0a192f;
             color: #e0e0e0;
             font-family: 'SimSun', 'STSong', serif;
             overflow-x: hidden;
             line-height: 1.8;
+            -webkit-overflow-scrolling: touch;
         }
-        /* 添加加载指示器样式 */
-        .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 25, 47, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
         }
-        .loader.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .loader-content {
+        header {
             text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(128, 216, 255, 0.3);
         }
-        .loader-text {
-            font-size: 1.5rem;
+        header h1 {
+            font-size: 2rem;
+            color: #f8f8f8;
+            margin-bottom: 0.5rem;
+        }
+        .scene {
+            background: rgba(10, 25, 47, 0.75);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .dialogue {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .story-list {
+            list-style-type: none;
+            margin: 1rem 0;
+        }
+        .story-item {
+            margin-bottom: 0.8rem;
+            padding: 0.8rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 8px;
+            -webkit-transition: all 0.3s ease;
+            transition: all 0.3s ease;
+        }
+        .story-item:hover {
+            background: rgba(128, 216, 255, 0.2);
+            -webkit-transform: translateY(-2px);
+            transform: translateY(-2px);
+        }
+        .story-link {
+            color: #e0e0e0;
+            text-decoration: none;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .story-icon {
+            font-size: 1.2rem;
             color: #ffd700;
-            margin-bottom: 1rem;
         }
-        .loader-spinner {
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
             width: 50px;
             height: 50px;
-            border: 3px solid rgba(255, 215, 0, 0.3);
+            background: rgba(10, 25, 47, 0.8);
+            border: 1px solid rgba(128, 216, 255, 0.5);
             border-radius: 50%;
-            border-top-color: #ffd700;
-            animation: spin 1s ease-in-out infinite;
-            margin: 0 auto;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            -webkit-tap-highlight-color: transparent;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        #musicIcon {
+            font-size: 1.2rem;
+            color: #e0e0e0;
         }
         .fog {
             position: fixed;
@@ -72,116 +117,23 @@
             pointer-events: none;
             z-index: 1;
         }
-        .container {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
+        @-webkit-keyframes float {
+            0% { -webkit-transform: translate(0, 0) rotate(0deg); transform: translate(0, 0) rotate(0deg); }
+            25% { -webkit-transform: translate(50px, 20px) rotate(5deg); transform: translate(50px, 20px) rotate(5deg); }
+            50% { -webkit-transform: translate(0, 50px) rotate(0deg); transform: translate(0, 50px) rotate(0deg); }
+            75% { -webkit-transform: translate(-50px, 20px) rotate(-5deg); transform: translate(-50px, 20px) rotate(-5deg); }
+            100% { -webkit-transform: translate(0, 0) rotate(0deg); transform: translate(0, 0) rotate(0deg); }
         }
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(128, 216, 255, 0.3);
-        }
-        header h1 {
-            font-size: 2.5rem;
-            color: #f8f8f8;
-            text-shadow: 0 0 10px rgba(128, 216, 255, 0.8), 0 0 20px rgba(128, 216, 255, 0.5);
-            margin-bottom: 0.5rem;
-        }
-        .scene {
-            background: rgba(10, 25, 47, 0.75);
-            border: 1px solid rgba(128, 216, 255, 0.3);
-            border-radius: 10px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            position: relative;
-        }
-        .scene:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url('https://picsum.photos/id/190/800/600');
-            background-position: center;
-            background-size: cover;
-            opacity: 0.15;
-            border-radius: 10px;
-            z-index: -1;
-        }
-        .dialogue {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
-        }
-        .story-list {
-            list-style-type: none;
-            margin: 1.5rem 0;
-        }
-        .story-item {
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: rgba(10, 25, 47, 0.6);
-            border: 1px solid rgba(128, 216, 255, 0.3);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-        .story-item:hover {
-            background: rgba(128, 216, 255, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 0 15px rgba(128, 216, 255, 0.3);
-        }
-        .story-link {
-            color: #e0e0e0;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-        .story-icon {
-            font-size: 1.5rem;
-            color: #ffd700;
-        }
-        .choice-btn {
-            padding: 0.8rem 2rem;
-            background: rgba(10, 25, 47, 0.6);
-            border: 1px solid rgba(128, 216, 255, 0.5);
-            border-radius: 20px;
-            color: #e0e0e0;
-            font-family: 'SimSun', serif;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 2rem;
-        }
-        .choice-btn:hover {
-            background: rgba(128, 216, 255, 0.2);
-            transform: translateY(-3px);
-            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        @keyframes float {
+            0% { -webkit-transform: translate(0, 0) rotate(0deg); transform: translate(0, 0) rotate(0deg); }
+            25% { -webkit-transform: translate(50px, 20px) rotate(5deg); transform: translate(50px, 20px) rotate(5deg); }
+            50% { -webkit-transform: translate(0, 50px) rotate(0deg); transform: translate(0, 50px) rotate(0deg); }
+            75% { -webkit-transform: translate(-50px, 20px) rotate(-5deg); transform: translate(-50px, 20px) rotate(-5deg); }
+            100% { -webkit-transform: translate(0, 0) rotate(0deg); transform: translate(0, 0) rotate(0deg); }
         }
     </style>
 </head>
 <body>
-    <!-- 添加加载指示器 -->
-    <div class="loader" id="loader">
-        <div class="loader-content">
-            <div class="loader-spinner"></div>
-            <div class="loader-text">加载中...</div>
-        </div>
-    </div>
-
-    <div class="fog"></div>
-    <!-- 音乐控制组件 -->
-    <div class="music-control" id="musicControl">
-        <span id="musicIcon">▶</span>
-    </div>
-    <!-- 移除自动加载音乐，改为用户交互后加载 -->
-    <audio id="backgroundMusic" loop></audio>
-
     <div class="container">
         <header>
             <h1>遗音天书</h1>
@@ -189,7 +141,7 @@
         </header>
 
         <!-- 主场景 -->
-        <div id="main-scene" class="scene scene-content active">
+        <div id="main-scene" class="scene">
             <div class="dialogue">
                 <p>以下是《遗音天书》的剧情列表，请选择查看：</p>
             </div>
@@ -199,123 +151,144 @@
         </div>
     </div>
 
+    <!-- 音乐控制组件 -->
+    <div class="music-control" id="musicControl">
+        <span id="musicIcon">▶</span>
+    </div>
+    <audio id="backgroundMusic" loop></audio>
+
     <script>
-        // 页面加载完成后隐藏加载指示器
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('loader').classList.add('hidden');
-                // 延迟添加背景图，提高初始加载速度
-                document.body.style.backgroundImage = "linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080')";
-                document.body.style.backgroundAttachment = "fixed";
-                document.body.style.backgroundPosition = "center";
-                document.body.style.backgroundRepeat = "no-repeat";
-                document.body.style.backgroundSize = "cover";
-            }, 500);
-        });
+        // 添加iOS兼容的DOMContentLoaded事件监听
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生成剧情列表
+            function generateStoryList() {
+                const storyList = document.getElementById('storyList');
+                const fragment = document.createDocumentFragment();
 
-        // 音乐控制逻辑 - 延迟加载音乐
-        const musicControl = document.getElementById('musicControl');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        let musicLoaded = false;
+                // 剧情文件列表
+                const stories = [
+                    { name: 'A1夏侯茶', file: '剧本/A1夏侯茶.docx' },
+                    { name: 'A2嵇淑夜', file: '剧本/A2嵇淑夜.docx' },
+                    { name: 'A3白渊', file: '剧本/A3白渊.docx' },
+                    { name: 'A4陈霁', file: '剧本/A4陈霁.docx' },
+                    { name: 'A5麒麟君', file: '剧本/A5麒麟君.docx' },
+                    { name: 'A6青阳', file: '剧本/A6青阳.docx' },
+                    { name: 'A7嵇伏', file: '剧本/A7嵇伏.docx' }
+                ];
 
-        musicControl.onclick = () => {
-            if (!musicLoaded) {
-                // 首次点击时加载音乐
-                backgroundMusic.src = '叩桐 - 华胥引.mp3';
-                musicLoaded = true;
-                // 加载完成后播放
-                backgroundMusic.oncanplaythrough = function() {
-                    backgroundMusic.play();
-                    musicControl.querySelector('#musicIcon').textContent = '⏸';
-                };
-            } else {
-                backgroundMusic.paused ? backgroundMusic.play() : backgroundMusic.pause();
-                musicControl.querySelector('#musicIcon').textContent = backgroundMusic.paused ? '▶' : '⏸';
+                // 动态创建列表项
+                stories.forEach(function(story) {
+                    const li = document.createElement('li');
+                    li.className = 'story-item';
+
+                    const a = document.createElement('a');
+                    a.href = story.file;
+                    a.className = 'story-link';
+                    a.target = '_blank';
+
+                    const icon = document.createElement('span');
+                    icon.className = 'story-icon';
+                    icon.textContent = '📜';
+
+                    const text = document.createTextNode(story.name);
+
+                    a.appendChild(icon);
+                    a.appendChild(text);
+                    li.appendChild(a);
+                    fragment.appendChild(li);
+                });
+
+                // 一次性添加到DOM
+                storyList.appendChild(fragment);
             }
-        };
 
-        // 优化云雾效果 - 减少元素数量并使用requestAnimationFrame
-        function createFog() {
-            const fog = document.querySelector('.fog');
-            // 减少云雾元素数量从10个到5个
-            for (let i = 0; i < 5; i++) {
-                const fogElement = document.createElement('div');
-                fogElement.style.position = 'fixed';
-                fogElement.style.top = Math.random() * 100 + 'vh';
-                fogElement.style.left = Math.random() * 100 + 'vw';
-                fogElement.style.width = Math.random() * 300 + 100 + 'px';
-                fogElement.style.height = Math.random() * 200 + 100 + 'px';
-                fogElement.style.background = 'rgba(255, 255, 255, 0.1)';
-                fogElement.style.borderRadius = '50%';
-                // 使用较短的动画时间
-                fogElement.style.animation = 'float ' + (Math.random() * 10 + 15) + 's linear infinite';
-                fogElement.style.zIndex = '-1';
-                fog.appendChild(fogElement);
+            // 生成剧情列表
+            generateStoryList();
+
+            // 创建云雾效果
+            function createFog() {
+                // 检查是否已创建fog元素
+                let fog = document.querySelector('.fog');
+                if (!fog) {
+                    fog = document.createElement('div');
+                    fog.className = 'fog';
+                    document.body.appendChild(fog);
+                }
+
+                // 创建少量云雾元素
+                for (let i = 0; i < 3; i++) {
+                    const fogElement = document.createElement('div');
+                    fogElement.style.position = 'fixed';
+                    fogElement.style.top = Math.random() * 100 + 'vh';
+                    fogElement.style.left = Math.random() * 100 + 'vw';
+                    fogElement.style.width = Math.random() * 200 + 100 + 'px';
+                    fogElement.style.height = Math.random() * 150 + 50 + 'px';
+                    fogElement.style.background = 'rgba(255, 255, 255, 0.1)';
+                    fogElement.style.borderRadius = '50%';
+                    fogElement.style.animation = 'float ' + (Math.random() * 10 + 15) + 's linear infinite';
+                    fogElement.style.webkitAnimation = 'float ' + (Math.random() * 10 + 15) + 's linear infinite';
+                    fogElement.style.zIndex = '-1';
+                    fog.appendChild(fogElement);
+                }
             }
-        }
 
-        // 浮动动画保持不变
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes float {
-                0% { transform: translate(0, 0) rotate(0deg); }
-                25% { transform: translate(50px, 20px) rotate(5deg); }
-                50% { transform: translate(0, 50px) rotate(0deg); }
-                75% { transform: translate(-50px, 20px) rotate(-5deg); }
-                100% { transform: translate(0, 0) rotate(0deg); }
-            }
-        `;
-        document.head.appendChild(style);
+            // 音乐控制逻辑 - 延迟加载音乐
+            const musicControl = document.getElementById('musicControl');
+            const backgroundMusic = document.getElementById('backgroundMusic');
+            let musicLoaded = false;
 
-        // 生成剧情列表 - 使用文档片段减少重排
-        function generateStoryList() {
-            const storyList = document.getElementById('storyList');
-            const fragment = document.createDocumentFragment();
-
-            // 剧情文件列表
-            const stories = [
-                { name: 'A1夏侯茶', file: '剧本/A1夏侯茶.docx' },
-                { name: 'A2嵇淑夜', file: '剧本/A2嵇淑夜.docx' },
-                { name: 'A3白渊', file: '剧本/A3白渊.docx' },
-                { name: 'A4陈霁', file: '剧本/A4陈霁.docx' },
-                { name: 'A5麒麟君', file: '剧本/A5麒麟君.docx' },
-                { name: 'A6青阳', file: '剧本/A6青阳.docx' },
-                { name: 'A7嵇伏', file: '剧本/A7嵇伏.docx' }
-            ];
-
-            // 动态创建列表项
-            stories.forEach(story => {
-                const li = document.createElement('li');
-                li.className = 'story-item';
-
-                const a = document.createElement('a');
-                a.href = story.file;
-                a.className = 'story-link';
-                a.target = '_blank';
-
-                const icon = document.createElement('span');
-                icon.className = 'story-icon';
-                icon.textContent = '📜';
-
-                const text = document.createTextNode(story.name);
-
-                a.appendChild(icon);
-                a.appendChild(text);
-                li.appendChild(a);
-                fragment.appendChild(li);
+            musicControl.addEventListener('click', function() {
+                if (!musicLoaded) {
+                    // 首次点击时加载音乐
+                    backgroundMusic.src = '叩桐 - 华胥引.mp3';
+                    musicLoaded = true;
+                    // 加载完成后播放
+                    backgroundMusic.addEventListener('canplaythrough', function playMusic() {
+                        backgroundMusic.play().catch(function(error) {
+                            console.log('播放失败:', error);
+                            // 在iOS上，自动播放可能被阻止，提示用户
+                            musicControl.querySelector('#musicIcon').textContent = '▶';
+                            alert('点击播放按钮开始背景音乐');
+                        });
+                        musicControl.querySelector('#musicIcon').textContent = '⏸';
+                        backgroundMusic.removeEventListener('canplaythrough', playMusic);
+                    });
+                } else {
+                    if (backgroundMusic.paused) {
+                        backgroundMusic.play().catch(function(error) {
+                            console.log('播放失败:', error);
+                        });
+                        musicControl.querySelector('#musicIcon').textContent = '⏸';
+                    } else {
+                        backgroundMusic.pause();
+                        musicControl.querySelector('#musicIcon').textContent = '▶';
+                    }
+                }
             });
 
-            // 一次性添加到DOM
-            storyList.appendChild(fragment);
-        }
+            // 添加背景图
+            function setBackgroundImage() {
+                // 优先使用本地背景图，如果不存在再使用网络图片
+                const useLocalBackground = true; // 根据实际情况调整
+                if (useLocalBackground) {
+                    try {
+                        // 假设存在本地背景图
+                        document.body.style.background = "linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('三元荣光尘土钱塘.jpg') no-repeat center center fixed";
+                        document.body.style.backgroundSize = "cover";
+                    } catch (e) {
+                        // 使用网络图片
+                        document.body.style.background = "linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080') no-repeat center center fixed";
+                        document.body.style.backgroundSize = "cover";
+                    }
+                } else {
+                    document.body.style.background = "linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080') no-repeat center center fixed";
+                    document.body.style.backgroundSize = "cover";
+                }
+            }
 
-        // 页面加载完成后创建云雾并生成剧情列表
-        window.addEventListener('load', () => {
-            // 使用requestAnimationFrame优化动画性能
-            requestAnimationFrame(() => {
-                createFog();
-                generateStoryList();
-            });
+            // 执行初始化
+            setBackgroundImage();
+            createFog();
         });
     </script>
 </body>
