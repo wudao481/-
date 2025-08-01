@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遗音天书 - 双人秘匣</title>
+    <style>
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(rgba(10, 25, 47, 0.85), rgba(10, 25, 47, 0.7)), url('https://picsum.photos/id/152/1920/1080') no-repeat center center fixed;
+            background-size: cover;
+            color: #e0e0e0;
+            font-family: 'SimSun', 'STSong', serif;
+            overflow-x: hidden;
+            line-height: 1.8;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+        .fog {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            width: 100%;
+            background: rgba(10, 25, 47, 0.75);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(128, 216, 255, 0.3);
+        }
+        header h1 {
+            font-size: 2rem;
+            color: #f8f8f8;
+            text-shadow: 0 0 10px rgba(128, 216, 255, 0.8), 0 0 20px rgba(128, 216, 255, 0.5);
+            margin-bottom: 0.5rem;
+        }
+        .title {
+            color: #ffd700;
+            font-size: 1.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        }
+        .story {
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            position: relative;
+        }
+        .story p {
+            margin-bottom: 1rem;
+            text-indent: 2em;
+        }
+        .password-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 2rem 0;
+        }
+        .password-input {
+            width: 80%;
+            max-width: 300px;
+            padding: 0.8rem 1rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 5px;
+            color: #e0e0e0;
+            font-family: 'SimSun', serif;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .submit-btn {
+            padding: 0.8rem 2rem;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 20px;
+            color: #e0e0e0;
+            font-family: 'SimSun', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .submit-btn:hover {
+            background: rgba(128, 216, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+        .treasure-box {
+            width: 250px;
+            height: 250px;
+            margin: 2rem auto;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+        .treasure-box.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .box-lid {
+            position: absolute;
+            top: 0;
+            width: 200px;
+            height: 50px;
+            background: linear-gradient(135deg, #5d4037, #8d6e63);
+            border: 2px solid #3e2723;
+            border-radius: 5px 5px 0 0;
+            transition: transform 1s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 2;
+        }
+        .box-body {
+            position: absolute;
+            bottom: 0;
+            width: 200px;
+            height: 180px;
+            background: linear-gradient(135deg, #795548, #a1887f);
+            border: 2px solid #3e2723;
+            border-radius: 0 0 5px 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .box-runes {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,215,0,0.2) 0%, rgba(255,215,0,0) 70%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 3;
+            animation: pulse 3s infinite;
+        }
+        .box-runes::before {
+            content: '●●●●● ●●●●●';
+            color: rgba(255, 215, 0, 0.7);
+            font-size: 2rem;
+            line-height: 1.2;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        .box-open .box-lid {
+            transform: translateY(-80px) rotateX(80deg);
+        }
+        .coins-container {
+            position: absolute;
+            bottom: 30px;
+            width: 150px;
+            height: 100px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.5s ease 1s;
+        }
+        .box-open .coins-container {
+            opacity: 1;
+        }
+        .coin {
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle, #ffd700, #d4af37);
+            border-radius: 50%;
+            border: 1px solid #8b7355;
+            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #3e2723;
+            font-weight: bold;
+            animation: bounce 1s ease-out;
+        }
+        .coin:nth-child(1) { animation-delay: 1s; }
+        .coin:nth-child(2) { animation-delay: 1.1s; }
+        .coin:nth-child(3) { animation-delay: 1.2s; }
+        .coin:nth-child(4) { animation-delay: 1.3s; }
+        .coin:nth-child(5) { animation-delay: 1.4s; }
+        .coin:nth-child(6) { animation-delay: 1.5s; }
+        .coin:nth-child(7) { animation-delay: 1.6s; }
+        .coin:nth-child(8) { animation-delay: 1.7s; }
+        .coin:nth-child(9) { animation-delay: 1.8s; }
+        .coin:nth-child(10) { animation-delay: 1.9s; }
+        .success-message {
+            text-align: center;
+            color: #ffd700;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease 2s;
+        }
+        .box-open ~ .success-message {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 1rem;
+            height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .error-message.show {
+            opacity: 1;
+        }
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+        }
+        @keyframes bounce {
+            0% { transform: translateY(20px); opacity: 0; }
+            60% { transform: translateY(-10px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        /* 呼吸效果 */
+        @keyframes breathe {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+            50% { transform: scale(1.03); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+        }
+        /* 寒气效果 */
+        @keyframes coldBreath {
+            0% { opacity: 0; transform: translateY(0); }
+            50% { opacity: 0.5; transform: translateY(10px); }
+            100% { opacity: 0; transform: translateY(20px); }
+        }
+        .cold-air {
+            position: absolute;
+            bottom: -20px;
+            width: 100px;
+            height: 30px;
+            background: rgba(128, 216, 255, 0.3);
+            border-radius: 50%;
+            filter: blur(5px);
+            z-index: 0;
+            animation: coldBreath 3s infinite;
+        }
+        /* 音乐控制组件 */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(10, 25, 47, 0.7);
+            border: 1px solid rgba(128, 216, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e0e0e0;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        .music-control:hover {
+            background: rgba(128, 216, 255, 0.2);
+            box-shadow: 0 0 15px rgba(128, 216, 255, 0.5);
+        }
+        /* 步骤指示器 */
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            padding: 0 1rem;
+        }
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid rgba(128, 216, 255, 0.3);
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .step.active {
+            background: rgba(128, 216, 255, 0.5);
+            border: 1px solid rgba(128, 216, 255, 0.8);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(128, 216, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="fog"></div>
+
+    <!-- 音乐控制组件 -->
+    <div class="music-control" id="musicControl">
+        <span id="musicIcon">▶</span>
+    </div>
+    <audio id="backgroundMusic" src="叩桐 - 华胥引.mp3" loop></audio>
+
+    <div class="container">
+        <header>
+            <h1>遗音天书</h1>
+            <div class="title">双人秘匣 · 同心为钥</div>
+        </header>
+
+        <div class="steps">
+            <div class="step active" id="step1">1</div>
+            <div class="step" id="step2">2</div>
+            <div class="step" id="step3">3</div>
+        </div>
+
+        <div id="passwordScene" class="scene">
+            <div class="story">
+                <p>眼前赫然立着一口古旧的铁匣，匣面遍布暗金符纹，纹理犹如千百只闭目的眼。铁匣微微颤动，似在呼吸，缝隙间渗出的寒气，竟让你指节发麻。</p>
+                <p>忽有低语自匣底传来，像是两股叠声：</p>
+                <p style="text-align: center; font-style: italic;">"一人之力，锁可不破。唯有两魂同契，方能启我。"</p>
+                <p style="text-align: center; margin-top: 2rem;">(寻找同伴，在双人秘匣前共同拍照并发给DM验证，方能打开秘匣。)</p>
+            </div>
+
+            <div class="password-container">
+                <input type="password" class="password-input" id="passwordInput" placeholder="请输入密码..." autocomplete="off">
+                <button class="submit-btn" id="submitBtn">开启秘匣</button>
+                <div class="error-message" id="errorMessage">密码错误，请重试</div>
+            </div>
+        </div>
+
+        <div class="treasure-box" id="treasureBox">
+            <div class="cold-air"></div>
+            <div class="box-runes"></div>
+            <div class="box-lid"></div>
+            <div class="box-body">
+                <div class="coins-container" id="coinsContainer">
+                    <!-- 硬币将通过JS动态生成 -->
+                </div>
+            </div>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            <p>恭喜！你获得了十枚铜钱！</p>
+            <p style="margin-top: 1rem; font-size: 1rem;">可用于兑换线索或道具</p>
+            <p>截图给DM验证</p>
+        </div>
+    </div>
+
+    <script>
+        // 音乐控制逻辑
+        const musicControl = document.getElementById('musicControl');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const musicIcon = document.getElementById('musicIcon');
+
+        musicControl.addEventListener('click', () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                musicIcon.textContent = '⏸';
+            } else {
+                backgroundMusic.pause();
+                musicIcon.textContent = '▶';
+            }
+        });
+
+        // 密码验证逻辑
+        const passwordInput = document.getElementById('passwordInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const treasureBox = document.getElementById('treasureBox');
+        const coinsContainer = document.getElementById('coinsContainer');
+        const successMessage = document.getElementById('successMessage');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+
+        // 正确密码
+        const correctPassword = 'qerw';
+
+        submitBtn.addEventListener('click', () => {
+            const password = passwordInput.value;
+
+            if (password === correctPassword) {
+                // 密码正确
+                errorMessage.classList.remove('show');
+                passwordInput.disabled = true;
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+
+                // 进入第二步
+                step1.classList.remove('active');
+                step2.classList.add('active');
+
+                // 显示宝箱
+                setTimeout(() => {
+                    treasureBox.classList.add('visible');
+
+                    // 宝箱呼吸效果
+                    treasureBox.style.animation = 'breathe 3s infinite';
+
+                    // 进入第三步
+                    setTimeout(() => {
+                        step2.classList.remove('active');
+                        step3.classList.add('active');
+
+                        // 打开宝箱
+                        setTimeout(() => {
+                            treasureBox.classList.add('box-open');
+
+                            // 生成10个硬币
+                            for (let i = 0; i < 10; i++) {
+                                const coin = document.createElement('div');
+                                coin.className = 'coin';
+                                coin.textContent = '钱';
+                                coinsContainer.appendChild(coin);
+                            }
+                        }, 1000);
+                    }, 2000);
+                }, 500);
+            } else {
+                // 密码错误
+                errorMessage.classList.add('show');
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 2000);
+                passwordInput.value = '';
+            }
+        });
+
+        // 按Enter键提交密码
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                submitBtn.click();
+            }
+        });
+
+        // 云雾效果
+        function createFog() {
+            const fog = document.querySelector('.fog');
+            for (let i = 0; i < 10; i++) {
+                const fogElement = document.createElement('div');
+                fogElement.style.position = 'fixed';
+                fogElement.style.top = Math.random() * 100 + 'vh';
+                fogElement.style.left = Math.random() * 100 + 'vw';
+                fogElement.style.width = Math.random() * 300 + 100 + 'px';
+                fogElement.style.height = Math.random() * 200 + 100 + 'px';
+                fogElement.style.background = 'rgba(255, 255, 255, 0.1)';
+                fogElement.style.borderRadius = '50%';
+                fogElement.style.animation = 'float ' + (Math.random() * 20 + 30) + 's linear infinite';
+                fogElement.style.zIndex = '-1';
+                fog.appendChild(fogElement);
+            }
+        }
+
+        // 添加浮动动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(50px, 20px) rotate(5deg); }
+                50% { transform: translate(0, 50px) rotate(0deg); }
+                75% { transform: translate(-50px, 20px) rotate(-5deg); }
+                100% { transform: translate(0, 0) rotate(0deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 页面加载完成后创建云雾
+        window.addEventListener('load', createFog);
+    </script>
+</body>
+</html>
