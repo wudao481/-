@@ -370,15 +370,15 @@
             <div class="box-runes"></div>
             <div class="box-lid"></div>
             <div class="box-body">
-                <div class="coins-container" id="coinsContainer">
-                    <!-- 硬币将通过JS动态生成 -->
+                <div class="item-container" id="itemContainer">
+                    <!-- 道具将通过JS动态生成 -->
                 </div>
             </div>
         </div>
 
         <div class="success-message" id="successMessage">
-            <p>恭喜！你获得了十枚铜钱！</p>
-            <p style="margin-top: 1rem; font-size: 1rem;">截图给DM，可用于兑换线索或道具</p>
+            <p id="itemName">恭喜！你获得了十枚铜钱！</p>
+            <p id="itemDesc" style="margin-top: 1rem; font-size: 1rem;">截图给DM，可用于兑换线索或道具</p>
         </div>
     </div>
 
@@ -403,19 +403,32 @@
         const submitBtn = document.getElementById('submitBtn');
         const errorMessage = document.getElementById('errorMessage');
         const treasureBox = document.getElementById('treasureBox');
-        const coinsContainer = document.getElementById('coinsContainer');
+        const itemContainer = document.getElementById('itemContainer');
         const successMessage = document.getElementById('successMessage');
+        const itemName = document.getElementById('itemName');
+        const itemDesc = document.getElementById('itemDesc');
         const step1 = document.getElementById('step1');
         const step2 = document.getElementById('step2');
         const step3 = document.getElementById('step3');
 
-        // 正确密码
-        const correctPassword = 'qerw';
+        // 正确密码和对应道具信息
+        const passwordItems = {
+            'qerw': {
+                name: '归元珠',
+                desc: '相传此珠为地神孕育天地之物。强身健体，疗愈一切伤害。',
+                icon: '💎'
+            },
+            'asdf': {
+                name: '明幽笔',
+                desc: '相传为神兽白泽之角制成的笔，执笔者即刻清心明目。',
+                icon: '✒️'
+            }
+        };
 
         submitBtn.addEventListener('click', () => {
             const password = passwordInput.value;
 
-            if (password === correctPassword) {
+            if (passwordItems[password]) {
                 // 密码正确
                 errorMessage.classList.remove('show');
                 passwordInput.disabled = true;
@@ -442,13 +455,20 @@
                         setTimeout(() => {
                             treasureBox.classList.add('box-open');
 
-                            // 生成10个硬币
-                            for (let i = 0; i < 10; i++) {
-                                const coin = document.createElement('div');
-                                coin.className = 'coin';
-                                coin.textContent = '钱';
-                                coinsContainer.appendChild(coin);
-                            }
+                            // 显示对应道具
+                            const item = passwordItems[password];
+                            itemContainer.innerHTML = '';
+
+                            // 创建道具图标
+                            const itemIcon = document.createElement('div');
+                            itemIcon.style.fontSize = '4rem';
+                            itemIcon.style.textAlign = 'center';
+                            itemIcon.textContent = item.icon;
+                            itemContainer.appendChild(itemIcon);
+
+                            // 更新成功消息
+                            itemName.textContent = `恭喜！你获得了${item.name}！`;
+                            itemDesc.textContent = item.desc;
                         }, 1000);
                     }, 2000);
                 }, 500);

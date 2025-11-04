@@ -1,0 +1,107 @@
+// ... existing code ...
+        <!-- 桐木场景 -->
+        <div id="tongmu-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>你选择了桐木，其笔直的纹理和疏松的材质让你想到它非常适合制作乐器或通风的器具。</p>
+                <p>你将桐木收进背包，或许在后续的冒险中能派上用场。</p>
+                <p>通关密码：0101</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('请返回紫来洞提交木头');">完成任务</button></div>
+        </div>
+
+        <!-- 崖柏木场景 -->
+        <div id="yabaimu-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>你选择了崖柏木，其独特的扭曲造型和清香味让你感到神清气爽。</p>
+                <p>材质紧密且含油量高，或许可以用来制作香料或耐久的木制品。</p>
+                <p>你小心地将崖柏木收进背包。</p>
+                <p>通关密码：0110</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('请返回紫来洞提交木头');">完成任务</button></div>
+        </div>
+
+        <!-- 沉香木场景 -->
+        <div id="chenxiangmu-scene" class="scene scene-content">
+            <div class="dialogue">
+                <p>你选择了沉香木，其细白的木质中似乎蕴含着神秘的力量。</p>
+                <p>你想起古籍中记载，沉香木受伤后形成的沉香具有安神定魂的功效，是极为珍贵的药材和香料。</p>
+                <p>你轻轻抚摸着沉香木，感觉它似乎在微微发热。</p>
+                <p>通关密码：0111</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;"><button class="exit-btn" onclick="alert('请返回紫来洞提交木头');">完成任务</button></div>
+        </div>
+// ... existing code ...
+    <script>
+        // 添加云雾动画函数定义
+        function createFog() {
+            const fog = document.querySelector('.fog');
+            for (let i = 0; i < 10; i++) {
+                const fogElement = document.createElement('div');
+                fogElement.style.position = 'absolute';
+                fogElement.style.top = Math.random() * 100 + 'vh';
+                fogElement.style.left = Math.random() * 100 + 'vw';
+                fogElement.style.width = Math.random() * 300 + 100 + 'px';
+                fogElement.style.height = Math.random() * 200 + 100 + 'px';
+                fogElement.style.background = 'rgba(255, 255, 255, 0.1)';
+                fogElement.style.borderRadius = '50%';
+                fogElement.style.animation = 'float ' + (Math.random() * 20 + 30) + 's linear infinite';
+                fogElement.style.zIndex = '-1';
+                fog.appendChild(fogElement);
+            }
+        }
+
+        // 添加浮动动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translate(0, 0) rotate(0deg); }
+                25% { transform: translate(50px, 20px) rotate(5deg); }
+                50% { transform: translate(0, 50px) rotate(0deg); }
+                75% { transform: translate(-50px, 20px) rotate(-5deg); }
+                100% { transform: translate(0, 0) rotate(0deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 新增密码验证功能
+        function checkPassword() {
+            const password = document.getElementById('password-input').value;
+            if (password === '0003') {
+                document.getElementById('password-screen').style.display = 'none';
+                document.getElementById('treasure-box-scene').classList.add('active');
+            } else {
+                alert('请前往紫来洞获取密码');
+            }
+        }
+
+        // 添加缺失的场景切换函数
+        function showScene(sceneName) {
+            document.querySelectorAll('.scene-content').forEach(scene => {
+                scene.classList.remove('active');
+            });
+            document.getElementById(`${sceneName}-scene`).classList.add('active');
+        }
+
+        // 页面加载时隐藏所有场景
+        window.addEventListener('load', function() {
+            document.querySelectorAll('.scene-content').forEach(scene => scene.classList.remove('active'));
+            createFog();
+            // 为无按钮场景添加离开按钮
+            document.querySelectorAll('.scene').forEach(scene => {
+                // 检查场景中是否已有按钮
+                const hasButtons = scene.querySelector('.choice-btn') !== null;
+                // 新增：检查当前场景是否是离开页面
+                const isExitPage = scene.id === 'next-point-scene';
+
+                // 只给没有按钮且不是离开页面的场景添加离开按钮
+                if (!hasButtons && !isExitPage) {
+                    const exitBtn = document.createElement('button');
+                    exitBtn.textContent = '离开';
+                    exitBtn.className = 'exit-btn';
+                    exitBtn.onclick = () => showScene('next-point');
+                    scene.appendChild(exitBtn);
+                }
+            });
+        });
+    </script>
+// ... existing code ...
